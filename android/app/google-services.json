@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "259116052459",
+    "firebase_url": "https://locumpro-261609.firebaseio.com",
+    "project_id": "locumpro-261609",
+    "storage_bucket": "locumpro-261609.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259116052459:android:1d495ca19bec3dd3e5b3ae",
+        "android_client_info": {
+          "package_name": "com.newlocumuser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "259116052459-050umh0ot7jim249ddvs6icnnpc1lilu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.newlocumuser",
+            "certificate_hash": "87dba33a102d083348c8eb83b2e59465a6d624e6"
+          }
+        },
+        {
+          "client_id": "259116052459-6914n526326u4gt9avvuh7n5ks0627h0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvjvwVeiP1gfshgYoYR0pX_oe8Yd7WbKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "259116052459-6914n526326u4gt9avvuh7n5ks0627h0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

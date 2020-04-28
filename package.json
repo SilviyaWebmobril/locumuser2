@@ -1,0 +1,76 @@
+{
+  "name": "NewLocumUser",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@react-native-community/async-storage": "^1.6.3",
+    "@react-native-community/geolocation": "^2.0.2",
+    "@react-native-community/netinfo": "^4.6.1",
+    "axios": "^0.19.2",
+    "ipay88-sdk": "^1.0.3",
+    "react": "16.9.0",
+    "react-native": "0.61.5",
+    "react-native-datepicker": "^1.7.2",
+    "react-native-document-picker": "^3.2.4",
+    "react-native-elements": "^1.2.7",
+    "react-native-file-picker": "0.0.19",
+    "react-native-firebase": "^5.6.0",
+    "react-native-geocoder": "^0.5.0",
+    "react-native-geocoding": "^0.4.0",
+    "react-native-gesture-handler": "^1.5.0",
+    "react-native-google-places-autocomplete": "^1.3.9",
+    "react-native-hide-show-password-input": "^1.1.0",
+    "react-native-image-picker": "^1.1.0",
+    "react-native-imagepicker": "^2.0.0",
+    "react-native-iphone-x-helper": "^1.2.1",
+    "react-native-keyboard-aware-scroll-view": "^0.9.1",
+    "react-native-keyboard-aware-scrollview": "^2.1.0",
+    "react-native-linear-gradient": "^2.5.6",
+    "react-native-maps": "^0.26.1",
+    "react-native-material-dropdown": "^0.11.1",
+    "react-native-material-textfield": "^0.16.1",
+    "react-native-modal-datetime-picker": "^7.6.0",
+    "react-native-module": "0.0.1",
+    "react-native-paper": "^3.2.1",
+    "react-native-paypal-wrapper": "^1.3.2",
+    "react-native-reanimated": "^1.4.0",
+    "react-native-star-rating": "^1.1.0",
+    "react-native-vector-icons": "^6.6.0",
+    "react-native-webview": "^7.5.1",
+    "react-navigation": "^4.0.10",
+    "react-navigation-drawer": "^2.3.3",
+    "react-navigation-stack": "^1.10.3",
+    "react-redux": "^7.1.0",
+    "reanimated": "0.0.1-alpha",
+    "redux": "^4.0.4",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.3.0",
+    "rnpm": "^1.9.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.8.3",
+    "@babel/runtime": "7.8.3",
+    "@react-native-community/eslint-config": "0.0.5",
+    "babel-jest": "24.9.0",
+    "eslint": "6.8.0",
+    "jest": "24.9.0",
+    "metro-react-native-babel-preset": "0.56.4",
+    "react-test-renderer": "16.9.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
+  }
+}
