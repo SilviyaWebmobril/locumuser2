@@ -21,7 +21,8 @@ const Register = (props) => {
 
     const [email ,setEmail ] = useState("");
     const [password ,setPassword ] = useState("");
-    const [name ,setName ] = useState('') ;
+    const [first_name ,setFirstName ] = useState('') ;
+    const [last_name ,setLastName ] = useState('') ;
     const [mobile ,setMobile  ] = useState("");
     const loading_status = useSelector(state => state.register.loading_status);
     const dispatchRegisterUser = useDispatch();
@@ -35,16 +36,22 @@ const Register = (props) => {
 
 		let valid = false;
 
-		if (name.length > 0 && password.length > 0 && email.length > 0 && mobile.toString().length > 0) {
+		if (first_name.length > 0 && last_name.length > 0 && password.length > 0 && email.length > 0 && mobile.toString().length > 0) {
 			valid = true;
 		}
 
-		if (name.length === 0) {
+		if (first_name.length === 0) {
 
-			showMessage(0, "Enter name", 'Register', true, false);
+			showMessage(0, "Enter first name", 'Register', true, false);
 
 			return false;
-		} else if (email.length === 0) {
+        }else if (last_name.length === 0) {
+
+			showMessage(0, "Enter last name", 'Register', true, false);
+
+			return false;
+		}
+         else if (email.length === 0) {
 
 			showMessage(0, "Enter email", 'Register', true, false);
 
@@ -100,7 +107,7 @@ const Register = (props) => {
                     return;
                 }else{
 
-                    dispatchRegisterUser(userRegister(name,email,mobile,password,props.navigation));
+                    dispatchRegisterUser(userRegister(first_name,last_name,email,mobile,password,props.navigation));
                 }
 
             });
@@ -142,18 +149,35 @@ const Register = (props) => {
                     }} />
 
 
-                <View style={{ width: Dimensions.get('window').width * 0.9,alignSelf:'center'}}>
+                <View style={{ width: Dimensions.get('window').width * 0.9,alignSelf:'center',marginTop:20}}>
 
                     <TextField
-                        style={{ width: '100%', alignSelf: "center",marginTop:10 }}
-                        label='Name'
+                        labelHeight={15}
+                        labelPadding={0}
+                        fontSize={14}
+                        style={{ width: '100%', alignSelf: "center", }}
+                        label='First Name'
                         maxLength={17}
-                        value={name}
-                        onChangeText={(name) => setName( name )}
+                        value={first_name}
+                        onChangeText={(value) => setFirstName( value )}
                     />
 
                     <TextField
-                        style={{ width: '100%', alignSelf: "center" ,marginTop:10}}
+                        labelHeight={15}
+                        labelPadding={0}
+                        fontSize={14}
+                        style={{ width: '100%', alignSelf: "center", }}
+                        label='Last Name'
+                        maxLength={17}
+                        value={last_name}
+                        onChangeText={(value) => setLastName( value )}
+                    />
+
+                    <TextField
+                        labelHeight={20}
+                        labelPadding={0}
+                        fontSize={14}
+                        style={{ width: '100%', alignSelf: "center" }}
                         label='Email'
                         value={email}
                         onChangeText={(email) => setEmail(email.trim())}
@@ -161,7 +185,10 @@ const Register = (props) => {
 
 
                     <TextField
-                        style={{ width: '100%', alignSelf: "center",marginTop:10 }}
+                         labelHeight={20}
+                         labelPadding={0}
+                         fontSize={14}
+                        style={{ width: '100%', alignSelf: "center", }}
                         label='Mobile no.'
                         maxLength={14}
                         keyboardType='numeric'
@@ -171,9 +198,14 @@ const Register = (props) => {
                     />
 
                     <PasswordInputText
+                        labelHeight={25}
+                        labelPadding={0}
+                        fontSize={14}
+                        style={{marginTop:10}}
                         style={{ width: '100%', alignSelf: "center" ,}}
                         label='Password'
                         maxLength={25}
+                        iconSize={20}
                         value={password}
                         onChangeText={(password) => setPassword(password.trim())}
                     />

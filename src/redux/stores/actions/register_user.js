@@ -102,6 +102,7 @@ export const getCitiesList = (state_id) => (dispatch) =>
                         type:GET_CITIES,
                         cities: city_list
                     })
+                    
                     resolve(city_list);
                 }else{
                     console.log("city list error",response.data.error);
@@ -125,7 +126,7 @@ export const getCitiesList = (state_id) => (dispatch) =>
     })
 
 
-export const userRegister  = (name,email,mobile,password,navigation) => {
+export const userRegister  = (first_name,last_name,email,mobile,password,navigation) => {
  
 
     return dispatch => {
@@ -138,7 +139,8 @@ export const userRegister  = (name,email,mobile,password,navigation) => {
 
         //any async code you want! 
         var formData  = new FormData();
-        formData.append('name', name);
+        formData.append('first_name', first_name);
+        formData.append('last_name', last_name);
 		formData.append('phone', mobile);
 		formData.append('email', email);
 		formData.append('password', password);
@@ -157,12 +159,13 @@ export const userRegister  = (name,email,mobile,password,navigation) => {
             dispatch( {
                 type:REGISTER_USER_RESPONSE,
                 register_id:response.data.result,
-                register_user_name : name
+                register_user_name : `${first_name} ${last_name}`
             });
 
+            console.log("respnse....",response.data.result)
             //dispatch(NavigationActions.navigate({ routeName: 'NoNetwork' }));
 
-            navigation.navigate('CreateProfile',{"name":name,"email":email,"mobile":mobile});
+           navigation.navigate('CreateProfile',{"first_name":first_name,"last_name":last_name,"email":email,"mobile":mobile});
           
         }else{
 
@@ -349,8 +352,8 @@ export const fetchSpecialities =  (profession_id) => (dispatch) =>
     })
 
 
-export const submitCreateProfile1 = (user_id,name,profession_val,mobile,degree,specialities_val,grades_val,
-    experience,address,current_work,description,lat,long,state_id,city_id,navigation) => {
+export const submitCreateProfile1 = (user_id,first_name,last_name,profession_val,mobile,degree,specialities_val,grades_val,
+    experience,address,current_work,description,lat,long,state_id,city_id,street_1,street_2,post_code,ic_no,mmc_no,apc_no, navigation) => {
 
     return dispatch => {
 
@@ -361,7 +364,8 @@ export const submitCreateProfile1 = (user_id,name,profession_val,mobile,degree,s
         var formData = new FormData();
         formData.append('userid', user_id);
         //formData.append('userid',507);
-        formData.append('name', name);
+        formData.append("first_name",first_name)
+        formData.append("last_name",last_name)
         formData.append('country',132);
         formData.append("state",state_id);
         formData.append("city",city_id);
@@ -370,17 +374,22 @@ export const submitCreateProfile1 = (user_id,name,profession_val,mobile,degree,s
         formData.append('profession', profession_val);
         formData.append('mobile', mobile);
         formData.append('degree', degree)
-        //formData.append('ic_no', ic_no);
+        formData.append('ic_no', ic_no);
         formData.append('speciality', specialities_val);
-        //formData.append('license', license);
+       
         formData.append('grade', grades_val)
         formData.append('experience', experience)
         formData.append('role', 5)
 
         //new
+        formData.append('post_code', post_code);
+        formData.append('street_1', street_1);
+        formData.append('street_2', street_2);
+        formData.append('mmc_no', mmc_no);
+        formData.append('apc_no', apc_no);
 
-        formData.append('location', address);
-        formData.append('current_work', current_work);
+        // formData.append('location', address);
+        // formData.append('current_work', current_work);
         formData.append('description', description)
          
         console.log("form data...",formData);
@@ -426,8 +435,8 @@ export const submitCreateProfile1 = (user_id,name,profession_val,mobile,degree,s
 
 }
 
-export const submitEditProfile = (user_id,name,profession_id,mobile,degree,speciality_id,grades_id,experience
-    ,user_address,current_work,description,lat ,long,state_id, city_id,navigation) => {
+export const submitEditProfile = (user_id,first_name,last_name,profession_id,mobile,degree,speciality_id,grades_id,experience
+    ,description,lat ,long,state_id, city_id,street_1,street_2,post_code,navigation) => {
 
     return dispatch => {
 
@@ -438,7 +447,8 @@ export const submitEditProfile = (user_id,name,profession_id,mobile,degree,speci
         var formData = new FormData();
         formData.append('userid', user_id);
         //formData.append('userid',507);
-        formData.append("name",name)
+        formData.append("first_name",first_name);
+        formData.append("last_name",last_name);
         formData.append('country',132);
         formData.append("state",state_id);
         formData.append("city",city_id);
@@ -454,14 +464,20 @@ export const submitEditProfile = (user_id,name,profession_id,mobile,degree,speci
         // formData.append("monthly_rate",monthly_rate);
 
         // formData.append('license', license);
+
+        formData.append('post_code', post_code);
+        formData.append('street_1', street_1);
+        formData.append('street_2', street_2);
+        // formData.append("mmc_no",mmc_no);
+        // formData.append("apc_no",apc_no);
         formData.append('grade', grades_id)
         formData.append('experience', experience)
         formData.append('role', 5)
 
         //new
 
-        formData.append('location', user_address);
-        formData.append('current_work', current_work);
+        // formData.append('location', user_address);
+        // formData.append('current_work', current_work);
         formData.append('description', description)
          
         console.log("form data...",formData);

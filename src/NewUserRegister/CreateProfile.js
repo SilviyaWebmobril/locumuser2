@@ -11,7 +11,7 @@ import { showMessage } from '../Globals/Globals';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import MyActivityIndicator from '../CustomUI/MyActivityIndicator';
 import { useDispatch, useSelector } from "react-redux";
-import {fetchJobCategories,fetchGrades,fetchSpecialities,submitCreateProfile1,getStatesList,getCitiesList} from '../redux/stores/actions/register_user';
+import {fetchJobCategories,fetchSpecialities,submitCreateProfile1,getStatesList,getCitiesList, showSpinner, hideSpinner} from '../redux/stores/actions/register_user';
 //import Geocoder from 'react-native-geocoder';
 
 import Geocoder from 'react-native-geocoding';
@@ -24,7 +24,15 @@ const CreateProfile = (props,navigation) => {
     const [profession_label ,setProfessionLabel ] = useState("");
     const [speciality_id ,setSpecialityId ] = useState("");
     const [speciality_label ,setSpecialityLabel ] = useState("");
-    //const [ic_no ,setIcNo ] = useState("");
+    const [ic_no ,setIcNo ] = useState("");
+
+    const [mmc_no ,setMmcNo ] = useState("");
+    const [apc_no ,setApcNo ] = useState("");
+    const [post_code ,setPostcode ] = useState("");
+    const [street_1 ,setStreet1 ] = useState("");
+    const [street_2 ,setStreet2 ] = useState("");
+    
+
     const [degree ,setDegree ] = useState("");
     const [experience ,setExperience ] = useState("");
     const [address ,setAddress ] = useState("");
@@ -32,10 +40,11 @@ const CreateProfile = (props,navigation) => {
     const [description ,setDescription ] = useState("");
     const [checked ,setChecked ] = useState(false);
     //const [license ,setLicense ] = useState("");
-    const [name ,setName ] = useState(props.navigation.getParam('name')) ;
+    const [first_name ,setFirstName ] = useState(props.navigation.getParam('first_name')) ;
+    const [last_name ,setLastName ] = useState(props.navigation.getParam('last_name')) ;
     const [mobile ,setMobile  ] = useState(props.navigation.getParam('mobile'));
     const loading_status = useSelector(state => state.register.loading_status);
-    const grades  =  useSelector(state => state.register.grades);
+   // const grades  =  useSelector(state => state.register.grades);
     const [grades_id,setGrade] = useState("");
     const [grades_label,setGradeLabel] = useState("");
     const profession_categories =  useSelector(state => state.register.profession_categories);
@@ -64,15 +73,8 @@ const CreateProfile = (props,navigation) => {
                     .then(response =>{
                         if(response == 1){
 
-                            dispatch(fetchGrades())
-                            .then(response => {
-    
-                                if(response == 1){
-                                    dispatch(getStatesList());
-                                }
-    
-                            })
-
+                            dispatch(getStatesList());
+                            
                         }
                        
                     })
@@ -162,15 +164,15 @@ const CreateProfile = (props,navigation) => {
         })
     }
 
-    const onGradeChangeListener = (id) => {
+    // const onGradeChangeListener = (id) => {
 
-        grades.forEach(element => {
-            if(element.value == id) {
-                setGrade(id);
-                setGradeLabel(element.label)
-            }
-        })
-    }
+    //     grades.forEach(element => {
+    //         if(element.value == id) {
+    //             setGrade(id);
+    //             setGradeLabel(element.label)
+    //         }
+    //     })
+    // }
 
     const isValid = () => {
 		var regexp = /^\d*\.?\d*$/;
@@ -179,6 +181,33 @@ const CreateProfile = (props,navigation) => {
 
 		if (degree.length > 0) {
 			valid = true;
+        }
+        
+        if (state_id.length === 0) {
+
+			showMessage(0, 'Select your State', 'Profile', true, false);
+
+			return false
+        }
+        if (street_1.length === 0) {
+
+			showMessage(0, 'Enter your Street 1', 'Profile', true, false);
+
+			return false
+        }
+        
+        if (street_2.length === 0) {
+
+			showMessage(0, 'Enter your Street 2', 'Profile', true, false);
+
+			return false
+        }
+        
+        if (post_code.length === 0) {
+
+			showMessage(0, 'Enter your Postcode', 'Profile', true, false);
+
+			return false
 		}
 
 		if (profession_id.length === 0) {
@@ -193,24 +222,43 @@ const CreateProfile = (props,navigation) => {
 
 			return false
 		}
-		else if (grades_id.length === 0) {
-
-			showMessage(0, 'Enter your grades', 'Profile', true, false);
-
-			return false
-		}
 		else if (degree.length === 0) {
 
 			showMessage(0, 'Enter  your degree', 'Profile', true, false);
 
 			return false;
-		}
-		else if (user_address.length === 0) {
+        }
+        
+        else if (degree.length === 0) {
 
-			showMessage(0, 'Enter  your Adrress', 'Profile', true, false);
+			showMessage(0, 'Enter  your degree', 'Profile', true, false);
+
+			return false;
+        }
+        else if (mmc_no.length === 0) {
+
+			showMessage(0, 'Enter  your MMC/MDC/NBM/PBM Number', 'Profile', true, false);
+
+			return false;
+        }
+        else if (apc_no.length === 0) {
+
+			showMessage(0, 'Enter  your APC Number', 'Profile', true, false);
+
+			return false;
+        }
+        else if (ic_no.length === 0) {
+
+			showMessage(0, 'Enter  your IC Number', 'Profile', true, false);
 
 			return false;
 		}
+		// else if (user_address.length === 0) {
+
+		// 	showMessage(0, 'Enter  your Adrress', 'Profile', true, false);
+
+		// 	return false;
+		// }
 		// else if (license.toString().trim().length === 0) {
 
 		// 	showMessage(0, 'Enter your license number', 'Profile', true, false);
@@ -275,16 +323,18 @@ const CreateProfile = (props,navigation) => {
                     return;
                 }else{
                     if(isValid()){
+                        dispatch(showSpinner())
 
                         Geocoder.init("AIzaSyDBxQEvhACIZ73YCvPF9fI7A2l6lULic0E");
-                        Geocoder.from(user_address)
+                        Geocoder.from(street_1)
                         .then(json => {
+                            dispatch(hideSpinner())
                             var location = json.results[0].geometry.location;
                             console.log(json);
                             console.log("location",location);
 
-                            dispatch(submitCreateProfile1(temp_register_id,name,profession_id,mobile,degree,speciality_id,grades_id,experience
-                                ,user_address,current_work,description,location.lat ,location.lng,state_id, city_id,props.navigation));
+                            dispatch(submitCreateProfile1(temp_register_id,first_name,last_name,profession_id,mobile,degree,speciality_id,grades_id,experience
+                                ,user_address,current_work,description,location.lat ,location.lng,state_id, city_id,street_1,street_2,post_code,ic_no,mmc_no,apc_no, props.navigation));
                         })
                         .catch(error => 
                             {
@@ -338,18 +388,33 @@ const CreateProfile = (props,navigation) => {
                 <KeyboardAwareScrollView >
                     <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
                    
-                    <View style={{width:Dimensions.get('window').width * 0.9,marginTop:30 }}>
+                    <View style={{width:Dimensions.get('window').width * 0.9,marginTop:40 }}>
                             <TextField
-                                style={{ alignSelf: 'center',marginTop:10,color:'#A9A9A9' }}
-                                label='Name'
-                                value={name}
+                                 labelHeight={15}
+                                 labelPadding={0}
+                                 fontSize={14}
+                                style={{ alignSelf: 'center',color:'#A9A9A9' }}
+                                label='First Name'
+                                value={first_name}
                                 editable={false}
-                                onChangeText={(name) => setName(name)}
+                                onChangeText={(value) => setFirstName(value)}
                             />
 
-
                             <TextField
-                                style={{ alignSelf: 'center',marginTop:10 ,color:'#A9A9A9' }}
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                style={{ alignSelf: 'center',color:'#A9A9A9' }}
+                                label='Last Name'
+                                value={last_name}
+                                editable={false}
+                                onChangeText={(value) => setLastName(value)}
+                            />
+                            <TextField
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                style={{ alignSelf: 'center',color:'#A9A9A9' }}
                                 label='Email'
                                 value={email}
                                 editable={false}
@@ -357,58 +422,10 @@ const CreateProfile = (props,navigation) => {
                             />
 
                             <TextField
-                                style={{ alignSelf: 'center',marginTop:10 ,color:'#A9A9A9' }}
-                                label='Country'
-                                value="Malaysia"
-                                editable={false}
-                                onChangeText={(email) => {}}
-                            />
-
-                            <Dropdown
-                                label='Select States'
-                                data={get_states_list}
-                                value={state_label}
-                                onChangeText={(value) => { onStateChangeListener(value) }} // passing id here
-                            />
-
-                            <Dropdown
-                                label='Select City'
-                                data={get_cities_list}
-                                value={city_label}
-                                onChangeText={(value) => { onCityChangeListener(value) }} // passing id here
-                            />
-
-                            <TextField
-                                style={{ alignSelf: 'center',marginTop:10  }}
-                                label='Address'
-                                value={user_address}
-                                onChangeText={(value) => setUserAddressGeocoder(value)}
-                            />
-
-                            <Dropdown
-                                label='Select Job Profile'
-                                data={profession_categories}
-                                value={profession_label}
-                                onChangeText={(value) => { onProfessionChangeListener(value) }} // passing id here
-                            />
-
-                            <Dropdown
-                                label='Select Specialities'
-                                data={specialities}
-                                value={speciality_label}
-                                onChangeText={(value) => { onSpecialityChangeListener(value) }}
-                              
-                            />
-                            <Dropdown
-                                label='Select Grades'
-                                data={grades}
-                                value={grades_label}
-                                onChangeText={(value) => {onGradeChangeListener(value) }}
-                                
-                            />
-                            
-                            <TextField
-                                style={{ alignSelf: 'center',marginTop:10  }}
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                style={{ alignSelf: 'center',}}
                                 label='Mobile'
                                 keyboardType='numeric'
                                 textContentType='telephoneNumber'
@@ -416,8 +433,115 @@ const CreateProfile = (props,navigation) => {
                                 editable={false}
                                 onChangeText={(mobile) => setMobile(mobile)}
                             />
+
                             <TextField
-                                style={{ alignSelf: 'center',marginTop:10  }}
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                style={{ alignSelf: 'center',color:'#A9A9A9' }}
+                                label='Country'
+                                value="Malaysia"
+                                editable={false}
+                                onChangeText={(email) => {}}
+                            />
+
+                            <Dropdown
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                label='Select States'
+                                data={get_states_list}
+                                value={state_label}
+                                onChangeText={(value) => { onStateChangeListener(value) }} // passing id here
+                            />
+
+                            <Dropdown
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                label='Select City'
+                                data={get_cities_list}
+                                value={city_label}
+                                onChangeText={(value) => { onCityChangeListener(value) }} // passing id here
+                            />
+
+                            <TextField
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                style={{ alignSelf: 'center',}}
+                                label='Street 1'
+                                value={street_1}
+                                onChangeText={(value) => setStreet1(value)}
+                            />
+                             <TextField
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                style={{ alignSelf: 'center',}}
+                                label='Street 2'
+                                value={street_2}
+                                onChangeText={(value) => setStreet2(value)}
+                            />
+                            <TextField
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                style={{ alignSelf: 'center',}}
+                                label='Postcode'
+                                maxLength={6}
+                                keyboardType="number-pad"
+                                value={post_code}
+                                onChangeText={(value) => setPostcode(value)}
+                            />
+                             {/* <TextField
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                style={{ alignSelf: 'center',}}
+                                label='Address'
+                                value={user_address}
+                                onChangeText={(value) => setUserAddressGeocoder(value)}
+                            /> */}
+
+                           
+                            <Dropdown
+                             labelHeight={15}
+                             labelPadding={0}
+                             fontSize={14}
+                                label='Select Job Profile'
+                                data={profession_categories}
+                                value={profession_label}
+                                onChangeText={(value) => { onProfessionChangeListener(value) }} // passing id here
+                            />
+
+                            <Dropdown
+                             labelHeight={15}
+                             labelPadding={0}
+                             fontSize={14}
+                                label='Select Specialities'
+                                data={specialities}
+                                value={speciality_label}
+                                onChangeText={(value) => { onSpecialityChangeListener(value) }}
+                              
+                            />
+                            {/* <Dropdown
+                             labelHeight={15}
+                             labelPadding={0}
+                             fontSize={14}
+                                label='Select Grades'
+                                data={grades}
+                                value={grades_label}
+                                onChangeText={(value) => {onGradeChangeListener(value) }}
+                                
+                            />
+                             */}
+                            
+                            <TextField
+                             labelHeight={15}
+                             labelPadding={0}
+                             fontSize={14}
+                                style={{ alignSelf: 'center',}}
                                 label='Degree'
                                 value={degree}
                                 onChangeText={(degree) => setDegree(degree)}
@@ -425,11 +549,47 @@ const CreateProfile = (props,navigation) => {
 
 
                             <TextField
-                                style={{ alignSelf: 'center',marginTop:10  }}
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                style={{ alignSelf: 'center',}}
+                                label='MMC/MDC/NBM/PBM Number'
+                                value={mmc_no}
+                                onChangeText={(value) => setMmcNo(value)}
+                            />
+
+                            <TextField
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                style={{ alignSelf: 'center',}}
+                                label='Valid APC Number'
+                                value={apc_no}
+                                onChangeText={(value) => setApcNo(value)}
+                            />
+
+
+                            <TextField
+                                labelHeight={15}
+                                labelPadding={0}
+                                fontSize={14}
+                                style={{ alignSelf: 'center', }}
+                                label='IC Number'
+                                value={ic_no}
+                                onChangeText={(ic_no) => setIcNo(ic_no)}
+
+                            /> 
+
+{/* 
+                            <TextField
+                             labelHeight={15}
+                             labelPadding={0}
+                             fontSize={14}
+                                style={{ alignSelf: 'center',}}
                                 label='Current Work'
                                 value={current_work}
                                 onChangeText={(current_work) => setCurrentWork(current_work)}
-                            />
+                            /> */}
 
                             {/* <TextField
                                 style={{ alignSelf: 'center',marginTop:10  }}
@@ -443,19 +603,15 @@ const CreateProfile = (props,navigation) => {
                                 label='License Number'
                                 value={license}
                                 onChangeText={(license) => setLicense(license)}
-                            />
-                            <TextField
-                                style={{ alignSelf: 'center',marginTop:10  }}
-                                label='IC Number'
-                                value={ic_no}
-                                onChangeText={(ic_no) => setIcNo(ic_no)}
-
-                            /> */}
+                            />*/}
 
 
 
                             <TextField
-                                style={{ alignSelf: 'center',marginTop:10  }}
+                             labelHeight={15}
+                             labelPadding={0}
+                             fontSize={14}
+                                style={{ alignSelf: 'center',}}
                                 label='Experience'
                                 keyboardType='phone-pad'
                                 maxLength={3}
@@ -470,7 +626,12 @@ const CreateProfile = (props,navigation) => {
 
 
                             <TextField
-                                style={{ alignSelf: 'center',marginTop:10  }}
+                             labelHeight={15}
+                             labelPadding={0}
+                             fontSize={14}
+                             multiline={true}
+                             maxLength={150}
+                                style={{ alignSelf: 'center',}}
                                 label='Description'
                                 value={description}
                                 onChangeText={(description) => setDescription( description )}

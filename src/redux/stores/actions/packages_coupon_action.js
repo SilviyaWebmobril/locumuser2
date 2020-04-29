@@ -70,7 +70,7 @@ export const get_packages = () => {
         });
 
         let formData =  new FormData();
-        formData.append("role",2);
+        formData.append("role",5);
         Axios.post(ApiUrl.base_url+ApiUrl.get_packages,formData)
             .then(response => {
 
@@ -163,10 +163,7 @@ export const get_coupons = (user_id) => {
 }
 
 
-
-
-
-export const applyCoupons = (user_id ,package_id,amount ,coupon_code,job_count) => (dispatch) => 
+export const applyCouponsNew = (user_id ,package_id ,coupon_code) => (dispatch) => 
 new Promise(function(resolve){
 
     dispatch({
@@ -175,32 +172,31 @@ new Promise(function(resolve){
 
     let formData = new FormData();
     formData.append('user_id', user_id);
-    formData.append('role', 2);
-    formData.append('amt', amount);
+    formData.append('role', 5);
     formData.append('coupon_code', coupon_code);
     formData.append('package_id', package_id);
-    formData.append('job_count', job_count);
+   
     console.log("formdata coupons",formData);
-    Axios.post(ApiUrl.base_url + ApiUrl.apply_coupons,formData)
+    Axios.post(ApiUrl.base_url + ApiUrl.apply_promo_new,formData)
         .then(response => {
 
-            console.log("resp",response.data);
+            
             dispatch({
                 type:ActionTypes.HIDE_SPINNER
             });
 
-            if(response.data.status == "success"){
+            if(response.data.error == "success"){
 
-                console.log("resppp",response.data);
+                
                 showMessage(0, response.data.message, "Apply Promo", true, false);
 
                 resolve(response);
 
                 
             }else{
-               resolve(response);
-
-                showMessage(0, response.data.message, "Apply Promo", true, false);
+             
+                //resolve(response);
+                showMessage(0,response.data.message, "Apply Promo", true, false);
             }
 
 
@@ -212,6 +208,56 @@ new Promise(function(resolve){
 
 
 });
+
+
+
+
+// export const applyCoupons = (user_id ,package_id,amount ,coupon_code,job_count) => (dispatch) => 
+// new Promise(function(resolve){
+
+//     dispatch({
+//         type:ActionTypes.SHOW_LOADING
+//     });
+
+//     let formData = new FormData();
+//     formData.append('user_id', user_id);
+//     formData.append('role', 2);
+//     formData.append('amt', amount);
+//     formData.append('coupon_code', coupon_code);
+//     formData.append('package_id', package_id);
+//     formData.append('job_count', job_count);
+//     console.log("formdata coupons",formData);
+//     Axios.post(ApiUrl.base_url + ApiUrl.apply_coupons,formData)
+//         .then(response => {
+
+//             console.log("resp",response.data);
+//             dispatch({
+//                 type:ActionTypes.HIDE_SPINNER
+//             });
+
+//             if(response.data.status == "success"){
+
+//                 console.log("resppp",response.data);
+//                 showMessage(0, response.data.message, "Apply Promo", true, false);
+
+//                 resolve(response);
+
+                
+//             }else{
+//                resolve(response);
+
+//                 showMessage(0, response.data.message, "Apply Promo", true, false);
+//             }
+
+
+
+//         })
+//         .catch(error => {
+//             console.log("error",error);
+//         })
+
+
+// });
 
 
 export const updateRemainingJobs = (remaining_job,wallet_bal) =>{

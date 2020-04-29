@@ -5,7 +5,7 @@ import {get_coupons} from '../redux/stores/actions/packages_coupon_action';
 import MyActivityIndicator from '../CustomUI/MyActivityIndicator';
 import {Card } from 'react-native-elements';
 import { checkuserAuthentication,logoutUser} from '../redux/stores/actions/auth_action';
-import { applyCoupons,updateRemainingJobs,buy_packages} from '../redux/stores/actions/packages_coupon_action';
+import { applyCoupons,updateRemainingJobs,buy_packages,applyCouponsNew} from '../redux/stores/actions/packages_coupon_action';
 import NetInfo from "@react-native-community/netinfo";
 import { StackActions, NavigationActions } from 'react-navigation';
 import {showMessage} from '../Globals/Globals';
@@ -100,6 +100,131 @@ const ApplyCoupon = (props) => {
       return valid;
     }
   const onApplyCoupon = () => {
+
+      if(isValid()){
+        NetInfo.isConnected.fetch().then(isConnected => {
+          if(isConnected) {
+              dispatch(checkuserAuthentication(userid,device_token))
+                .then(response => {
+
+                    if(response.data.error){
+                      showMessage(0, 'Session Expired! Please Login.', 'Apply Coupon', true, false);
+                          dispatch(logoutUser());
+                          props.navigation.navigate("Login")
+                          const resetAction = StackActions.reset({
+                              index: 0,
+                              key: 'Login',
+                              actions: [NavigationActions.navigate({ routeName: 'Login' })],
+                          });
+                          props.navigation.dispatch(resetAction);
+
+                    }else{
+
+                          //user_id ,package_id,amount ,coupon_code,job_count,
+                          let result = props.navigation.getParam('result')
+                          dispatch(applyCouponsNew(userid,result["package_id"],promo_name))
+                            .then(response => {
+
+                              console.log("final response",response.data);
+
+                              let result = props.navigation.getParam('result')
+
+                              let TotalJobs  = parseInt(user_job_remaining) + parseInt(result['job_count']);
+                              console.log("job count222",TotalJobs);
+                              // let net_price = parseFloat(result["price"])-parseFloat(promo_price);
+                              // let new_wallet =  parseFloat(user.wallet_balance) - parseFloat(net_price) ;
+                              dispatch(updateRemainingJobs(TotalJobs,user.wallet_balance))
+                              //props.navigation.state.params.checkcouponvalidity(result["package_id"],promo_price);
+                              props.navigation.pop();
+                              props.navigation.navigate('TransactionList');
+                                const resetAction = StackActions.reset({
+                                  index: 0,
+                                  key: 'Transactions',
+                                  actions: [NavigationActions.navigate({ routeName: 'TransactionList' })],
+                                });
+                                props.navigation.dispatch(resetAction);
+
+
+                              // if(response.data.amt_to_pay == 0){
+
+                              //   let result = props.navigation.getParam('result')
+
+                              //   let TotalJobs  = parseInt(user_job_remaining) + parseInt(result['job_count']);
+                              //   console.log("job count222",TotalJobs);
+                              //   let net_price = parseFloat(result["price"])-parseFloat(promo_price);
+                              //   let new_wallet =  parseFloat(user.wallet_balance) - parseFloat(net_price) ;
+                              //   dispatch(updateRemainingJobs(TotalJobs,new_wallet))
+                              //   props.navigation.state.params.checkcouponvalidity(result["package_id"],promo_price);
+                              //   props.navigation.pop();
+                              //   props.navigation.navigate('TransactionList');
+                              //     const resetAction = StackActions.reset({
+                              //       index: 0,
+                              //       key: 'Transactions',
+                              //       actions: [NavigationActions.navigate({ routeName: 'TransactionList' })],
+                              //     });
+                              //     props.navigation.dispatch(resetAction);
+          
+          
+
+                              // }else if(response.data.status == 0){
+
+                              //   //  // here coupon is applied now add money to deduct extra amount from wallet 
+
+                              //   let result = props.navigation.getParam('result')
+                              //   let net_price = parseFloat(result["price"])-parseFloat(promo_price);
+
+                              //   let obj = {
+                              //     'user_id': userid,
+                              //     'price': net_price,
+                              //     'package_id': result["package_id"],
+                              //     'job_count': result['job_count'],
+                              //     "coupon_applied" : response.data.coupon_applied
+                              //   }
+                
+                
+                              //   console.log("wallet",user.wallet_balance);
+                              //   if (parseFloat(user.wallet_balance) <= 0 || parseFloat(user.wallet_balance) <  parseFloat(net_price) ) {
+                              //     props.navigation.navigate("AddMoney", { buy_package: 1, result: obj,payAgain:buyNowHandler })
+                              //     const resetAction = StackActions.reset({
+                              //       index: 0,
+                              //       key: 'AddMoney',
+                              //       actions: [NavigationActions.navigate({ routeName: 'AddMoney' })],
+                              //     });
+                              //     props.navigation.dispatch(resetAction);
+
+                              //   }
+                              // }
+                              // else if(response.data.amt_to_pay == 1){
+
+                              //   // here coupon is applied now deduct extra amount from wallet 
+
+                                
+                              //   let result = props.navigation.getParam('result')
+                              //   setCouponApplied(response.data.coupon_applied)
+                              //   console.log("pack id",result["package_id"]);
+                              //   console.log("pack price",result["price"]);
+                              //   console.log("promo_price",promo_price);
+                              //   console.log("job_count",result['job_count']);
+                              //   console.log("coupon applied",response.data.coupon_applied);
+                              //   console.log("sub",parseFloat(result["price"]) - parseFloat(promo_price))
+                              //   let net_price = parseFloat(result["price"]) - parseFloat(promo_price);
+                              //  buyNowHandler(result["package_id"],net_price,result['job_count'],response.data.coupon_applied)
+                                
+                              
+
+                              // }
+                            })
+
+
+                    }
+                })
+            
+          }else{
+            props.navigation.navigate('NoNetwork')
+          }
+          
+        });
+      }
     
   }
 

@@ -48,20 +48,20 @@ const BuyPackages = (props) => {
     //       props.navigation.navigate("ApplyCoupon", {result:{...obj},checkcouponvalidity: checkcoupoun }) 
        
     // }
-    const applyPromoHandler = () => {
+    const applyPromoHandler = (id , amount , jobcount) => {
 
-      // let obj = {
-      //     'user_id': user_id,
-      //     'price': amount,
-      //     'package_id': id,
-      //     'job_count': jobcount
+      let obj = {
+          'user_id': user_id,
+          'price': amount,
+          'package_id': id,
+          'job_count': jobcount
 
-      //   }
+        }
+        console.log("obj",obj);
+        setChosenPackagePrice(amount);
+        props.navigation.navigate("ApplyCoupon", {result:{...obj}}) 
+      
 
-       // setChosenPackagePrice(amount);
-       // props.navigation.navigate("ApplyCoupon", {result:{...obj},checkcouponvalidity: checkcoupoun }) 
-        props.navigation.navigate("ApplyCoupon") 
-     
   }
 
     const checkcoupoun = (id,coupon_amt) =>{
@@ -192,11 +192,17 @@ const BuyPackages = (props) => {
                       <Text style={{ fontFamily:'roboto-bold', marginBottom: 5 }}> MYR {item.amt}</Text>
                     </View>
 
-                    <View style={{ flexDirection: "row", justifyContent: "flex-end"  }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between"  }}>
                         
-                      {/* <TouchableOpacity onPress={()=>applyPromoHandler(item.id, item.amt , item.jobs_count)}>
-                        <Text style={{ fontFamily:'roboto-bold', color: '#4C74E6', alignSelf: "flex-start", fontSize: 12 }}>APPLY COUPON</Text>
-                      </TouchableOpacity> */}
+                    {(item.coupons.length > 0 && item.coupons !== null) 
+                        ?
+                        <TouchableOpacity onPress={()=>applyPromoHandler(item.id, item.amt , item.jobs_count)}>
+                          <Text style={{ fontFamily:'roboto-bold', color: '#4C74E6', alignSelf: "flex-start", fontSize: 12 }}>APPLY COUPON</Text>
+                        </TouchableOpacity>
+                        :
+                        <View/>
+                      }
+                        
                       <TouchableOpacity onPress={()=>buyNowHandler(item.id,item.amt , item.jobs_count,"")}>
                         <Text style={{ fontFamily:'roboto-bold', color: '#4C74E6', alignSelf: "flex-end", fontSize: 12 }}>BUY NOW</Text>
                       </TouchableOpacity>
@@ -252,14 +258,7 @@ const BuyPackages = (props) => {
               }
               keyExtractor={item => item.id}
             />
-             <TouchableOpacity onPress={()=>{
-               //applyPromoHandler(item.id, item.amt , item.jobs_count)
-                applyPromoHandler()
-               }} 
-               style={{backgroundColor:'#4C74E6',alignSelf: "center",marginRight:20,marginTop:5 ,padding:8,borderRadius:4 }}>
-              <Text style={{ fontFamily:'roboto-bold', color: 'white', fontSize: 12,}}>APPLY COUPON</Text>
-            </TouchableOpacity>
-
+            
         </View>
     )
 

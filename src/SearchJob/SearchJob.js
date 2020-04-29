@@ -1,12 +1,12 @@
 import React ,{ useState, useEffect }  from 'react';
-import {View ,Text, TouchableOpacity, StyleSheet ,SafeAreaView,TouchableWithoutFeedback,Image, Dimensions} from 'react-native'
+import {View ,Text, TouchableOpacity,Switch, StyleSheet ,SafeAreaView,TouchableWithoutFeedback,Image, Dimensions} from 'react-native'
 import MyHOC from '../HOC/MyHOC';
 import MyActivityIndicator from '../CustomUI/MyActivityIndicator';
 import { TextField } from 'react-native-material-textfield';
 import NetInfo from "@react-native-community/netinfo";
 import { useSelector , useDispatch} from 'react-redux';
 import { Dropdown } from 'react-native-material-dropdown';
-import {fetchJobCategories} from '../redux/stores/actions/register_user';
+import {fetchJobCategories, getStatesList, getCitiesList} from '../redux/stores/actions/register_user';
 import { checkuserAuthentication,logoutUser} from '../redux/stores/actions/auth_action';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import { searchRequestedJobs } from '../redux/stores/actions/search_job_action';
@@ -33,13 +33,90 @@ const SearchJob = (props) => {
     const dispatch = useDispatch();
     const user_id = useSelector(state=>  state.auth.user_id);
 
+    let get_states_list = useSelector(state => state.register.states_list);
+    let get_cities_list = useSelector(state => state.register.cities_list);
+
+    const [state_id ,setStateId ] = useState("");
+    const [state_label ,setStateLabel ] = useState("");
+    const [city_label ,setCityLabel ] = useState("");
+    const [city_id , setCityId] = useState("");
+    const [toggleSwitch, setToggleSwitch] = useState(false)
+
     useEffect(() => {
 
         dispatch(fetchJobCategories());
+        dispatch(getStatesList());
+
         
        
     },[]);
 
+
+    const onStateChangeListener = (id) => {
+        
+        get_states_list.forEach(element => {
+
+            
+            if(id  ===  element.value) {
+                setStateId(element.value);
+                
+                setStateLabel(element.label);
+                NetInfo.isConnected.fetch().then(isConnected => {
+
+                    if(!isConnected){
+                        props.navigation.navigate("NoNetwork");
+                        return;
+                    }else{
+                        
+                        setCityId("");
+                        setCityLabel("");
+                        dispatch(getCitiesList(id))
+                        .then(response =>{
+
+                            if(response.length >0 ){
+
+                                response.forEach(ele => {
+
+                                    if(ele.value  == city_id){
+                        
+                                        //setCityId(ele.value);
+                                        setCityLabel(ele.label)
+                                       
+                                    }
+
+                                })
+                              
+                            }else{
+                                setCityLabel(element.label)
+                            }
+                           
+
+                        })
+                    }
+                });
+            }
+        })
+    }
+
+    const setToggleValues = () => {
+
+        setStateId("");
+        setCityId("");
+       
+        setToggleSwitch(!toggleSwitch);
+    }
+
+    const onCityChangeListener = (id) => {
+
+        get_cities_list.forEach(ele => {
+
+            if(ele.value  == id){
+
+                setCityId(ele.value);
+                setCityLabel(ele.label)
+            }
+        })
+    }
 
 
     const onChangeTextPress = (value)  => {
@@ -67,21 +144,25 @@ const SearchJob = (props) => {
            
             showMessage(0,'You must select job profile', 'Search Job', true, false);
 
-        }else if(user_location_preference !== 3){
+            return false;
 
-            if (fulladdress.length > 0 &&  experience.toString().length > 0) {
-                valid = true;
-            }else if (fulladdress.length === 0) {
+        }
+        
+        // else if(user_location_preference !== 3){
+
+        //     if (fulladdress.length > 0 &&  experience.toString().length > 0) {
+        //         valid = true;
+        //     }else if (fulladdress.length === 0) {
     
            
-                showMessage(0,'You must enter a location', 'Search Job', true, false);
-            }
+        //         showMessage(0,'You must enter a location', 'Search Job', true, false);
+        //     }
             
 
            
-        } 
+        // } 
     
-        return valid;
+        return true;
     }
 
     
@@ -107,8 +188,17 @@ const SearchJob = (props) => {
                                 props.navigation.dispatch(resetAction);
 
                             }else{
-                                dispatch(searchRequestedJobs(dropdown_value_id,experience,fulladdress,latitude,longitude,user_id,props.navigation));
+                               // dispatch(searchRequestedJobs(dropdown_value_id,experience,fulladdress,latitude,longitude,user_id,props.navigation));
                         
+                               let loc_pref;
+                               if(city_id1 || city_id2 ){
+                                   loc_pref = 1;
+                               }else if(toggleSwitch){
+                                   loc_pref = 3;
+                               }else{
+                                   loc_pref = 2;
+                               }
+                                dispatch(searchRequestedJobs(dropdown_value_id,experience,fulladdress,latitude,longitude,user_id,state_id,city_id,props.navigation));
                             }
 
                         })
@@ -223,6 +313,9 @@ const SearchJob = (props) => {
         <View style={styles.container}>
 
             <Dropdown
+                labelPadding={0}
+                labelHeight={15}
+                fontSize={14}
                 label='Select Job Profile'
                 data={profession_categories}
                 value={dropdown_label}
@@ -241,7 +334,31 @@ const SearchJob = (props) => {
                 }}
             /> */}
 
-            <TextField
+            <Dropdown
+                    labelPadding={0}
+                    labelHeight={15}
+                    fontSize={14}
+                    label='Select States'
+                    data={get_states_list}
+                    value={state_label}
+                    onChangeText={(value) => { onStateChangeListener(value) }} // passing id here
+                />
+
+                <Dropdown
+                    labelPadding={0}
+                    labelHeight={15}
+                    fontSize={14}
+                    label='Select City'
+                    data={get_cities_list}
+                    value={city_label}
+                    onChangeText={(value) => { onCityChangeListener(value) }} // passing id here
+                />
+
+
+            {/* <TextField
+                labelPadding={0}
+                labelHeight={15}
+                fontSize={14}
                 style={{ width: '100%' }}
                 label='Location'
                 editable = {!(user_location_preference ==  3)}
@@ -251,18 +368,28 @@ const SearchJob = (props) => {
                 }}
                 value={fulladdress}
                 onChangeText={(fulladdress) => setFullAddress(fulladdress)}
-            />
+            /> */}
 
-            {user_location_preference == 3
+<               View style={{flexDirection:"row",justifyContent:"space-between",marginTop:15}}>
+                    <Text style={styles.textStyle}>10km to 20km from my location</Text>
+                    <Switch 
+                     trackColor={{true: '#4C74E6', false: 'grey'}}
+                     thumbColor='#4C74E6'
+                     onValueChange = {setToggleValues}
+                     value = {toggleSwitch}
+                    />
+                </View>
+
+            {/* {toggleSwitch
             ?
             <View style={{width:'100%',backgroundColor:'#ececec',height:100,
                     borderWidth:1,borderRadius:2,borderColor:'#ececec',padding:5}}>
                 <Text style={{ fontFamily:'roboto-bold',fontSize:14,color:"grey"}}>Note :</Text>
-                <Text numberOfLines={4} style={{ fontFamily:'roboto-light',fontSize:14,color:"black"}}>You have choosen your location preference of 10-20km. To enable location Edit location preference settings on Profile.</Text>
+                <Text numberOfLines={4} style={{ fontFamily:'roboto-light',fontSize:14,color:"black"}}>You have choosen your location preference of 10-20km. </Text>
             </View>
             :
             <View/>
-            }
+            } */}
            
 
            

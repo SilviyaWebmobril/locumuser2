@@ -48,7 +48,10 @@ export default  {
 
     buy_package : "get_package",
 
+    // not suing this
     apply_coupons :"apply_promo",
+
+    apply_promo_new :"apply_promo_new",
 
     apply_job :"apply_job",
 

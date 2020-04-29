@@ -136,16 +136,21 @@ const Login = (props) => {
                     height: Dimensions.get('window').height * 0.2
                 }} />
   
-            <View style={{ width: Dimensions.get('window').width * 0.9,alignSelf:'center'}}>
+            <View style={{ width: Dimensions.get('window').width * 0.9,alignSelf:'center',marginTop:20}}>
   
               <TextField
-                style={{ width: '100%',alignSelf: "center",marginTop:10 }}
+                labelHeight={15}
+                labelPadding={0}
+                fontSize={14}
+                style={{ width: '100%',alignSelf: "center",}}
                 label='Email'
                 value={email}
                 onChangeText={(email) => setEmail(email.trim())}
               />
   
               <PasswordInputText
+               
+                fontSize={14}
                 style={{ width: '100%',alignSelf: "center",}}
                 label='Password'
                 maxLength={25}

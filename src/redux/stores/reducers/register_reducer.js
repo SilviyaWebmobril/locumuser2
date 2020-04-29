@@ -84,15 +84,20 @@ export default  (state = initialState ,action) => {
             let user_data = action.result_user;
             let exist_user_data = {...state.user};
            // await AsyncStorage.setItem('user_id',JSON.stringify(user_data.id));
-           let name1 , email , address, degree , mobile ,hourly_rate, weekly_rate, monthly_rate,daily_rate, grade , longitude,
+           let first_name,last_name , email , address, degree , mobile ,hourly_rate, weekly_rate, monthly_rate,daily_rate, grade , longitude,
            latitude ,city_id,state_id,location_preference,preference_one_city,preference_one_state,preference_two_city,preference_two_state,
            experience,userdoc_1,userdoc_2,userdoc_3,userdoc_4,user_image ,license,ic_no, current_work,wallet_balance,jobs_remaining,
-           email_verify,description,document_upload_status,profile_upload_status;
-           if(user_data.name !== null){
-               name1 = user_data.name;
-           }else{
-               name1 = "";
-           }
+           email_verify,description,document_upload_status,profile_upload_status,mmc_no,apc_no,street_1,street_2,post_code;
+           if(user_data.first_name !== null){
+            first_name = user_data.first_name;
+            }else{
+                first_name = "";
+            }
+            if(user_data.last_name !== null){
+                last_name = user_data.last_name;
+            }else{
+                last_name = "";
+            }
 
            if(user_data.email !== null){
                 email =  user_data.email;
@@ -275,6 +280,33 @@ export default  (state = initialState ,action) => {
                 description = "";
             }
 
+            if(user_data.street_1 !== null ){
+                street_1 = user_data.street_1;
+            }else{
+                street_1 = "";
+            }
+            if(user_data.street_2 !== null ){
+                street_2 = user_data.street_2;
+            }else{
+                street_2 = "";
+            }
+            if(user_data.post_code !== null ){
+                post_code = user_data.post_code;
+            }else{
+                post_code = "";
+            }
+            if(user_data.mmc_no !== null ){
+                mmc_no = user_data.mmc_no;
+            }else{
+                mmc_no = "";
+            }
+
+            if(user_data.apc_no !== null ){
+                apc_no = user_data.apc_no;
+            }else{
+                apc_no = "";
+            }
+
             if(user_data.document_upload_status !== null ){
                 document_upload_status = user_data.document_update_status;
             }else{
@@ -286,10 +318,12 @@ export default  (state = initialState ,action) => {
                 profile_upload_status = "";
             }
 
+            
             Object.assign(exist_user_data ,{
                 
                 id : user_data.id,
-                name : name1,
+                first_name : first_name,
+                last_name :last_name,
                 email :email,
                 address :address,
                 degree : degree,
@@ -320,6 +354,11 @@ export default  (state = initialState ,action) => {
                 roles_id : user_data.roles_id,
                 license :license,
                 ic_no : ic_no,
+                apc_no :apc_no,
+                mmc_no:mmc_no,
+                post_code:post_code,
+                street_1:street_1,
+                street_2 :street_2,
                 current_work : current_work,
                 wallet_balance:wallet_balance ,
                 jobs_remaining : jobs_remaining,
@@ -330,7 +369,7 @@ export default  (state = initialState ,action) => {
                 document_upload_status : document_upload_status,
                 profile_upload_status : profile_upload_status
             });
-            //console.log("user data exist", exist_user_data);
+            console.log("user data exist", exist_user_data);
             return {
                 ...state,
                 loading_status:false,
@@ -343,16 +382,22 @@ export default  (state = initialState ,action) => {
                 let user_data1 = action.result_user;
                 let exist_user_data1 = {...state.user};
                // await AsyncStorage.setItem('user_id',JSON.stringify(user_data.id));
-               let name , email , address, degree , mobile ,hourly_rate, weekly_rate, monthly_rate,daily_rate, grade , longitude,
+               let first_name,last_name , email , address, degree , mobile ,hourly_rate, weekly_rate, monthly_rate,daily_rate, grade , longitude,
                latitude ,city_id,state_id,location_preference,preference_one_city,preference_one_state,preference_two_city,preference_two_state,
                experience,userdoc_1,userdoc_2,userdoc_3,userdoc_4,user_image ,license,ic_no, current_work,wallet_balance,jobs_remaining,
-               email_verify,description,document_upload_status,profile_upload_status;
-               if(user_data1.name !== null){
-                   name = user_data1.name;
+               email_verify,description,document_upload_status,profile_upload_status,mmc_no,apc_no,street_1,street_2,post_code;
+
+               if(user_data1.first_name !== null){
+                   first_name = user_data1.first_name;
                }else{
-                   name = "";
+                   first_name = "";
                }
-    
+               if(user_data1.last_name !== null){
+                    last_name = user_data1.last_name;
+                }else{
+                    last_name = "";
+                }
+ 
                if(user_data1.email !== null){
                     email =  user_data1.email;
                }else{
@@ -504,6 +549,33 @@ export default  (state = initialState ,action) => {
                 }else{
                     ic_no = "";
                 }
+
+                if(user_data1.street_1 !== null ){
+                    street_1 = user_data1.street_1;
+                }else{
+                    street_1 = "";
+                }
+                if(user_data1.street_2 !== null ){
+                    street_2 = user_data1.street_2;
+                }else{
+                    street_2 = "";
+                }
+                if(user_data1.post_code !== null ){
+                    post_code = user_data1.post_code;
+                }else{
+                    post_code = "";
+                }
+                if(user_data1.mmc_no !== null ){
+                    mmc_no = user_data1.mmc_no;
+                }else{
+                    mmc_no = "";
+                }
+    
+                if(user_data1.apc_no !== null ){
+                    apc_no = user_data1.apc_no;
+                }else{
+                    apc_no = "";
+                }
     
                 if(user_data1.current_work !== null){
                     current_work = user_data1.current_work;
@@ -543,10 +615,13 @@ export default  (state = initialState ,action) => {
                 }else{
                     profile_upload_status = "";
                 }
+
+                console.log("user datat redux",user_data1)
                 Object.assign(exist_user_data1 ,{
                     ...exist_user_data1,
                     id : user_data1.id,
-                    name : name,
+                    first_name : first_name,
+                    last_name : last_name,
                     email : email,
                     address :address,
                     degree : degree,
@@ -577,6 +652,11 @@ export default  (state = initialState ,action) => {
                     roles_id : user_data1.roles_id,
                     license : license,
                     ic_no : ic_no,
+                    apc_no :apc_no,
+                    mmc_no:mmc_no,
+                    post_code:post_code,
+                    street_1:street_1,
+                    street_2 :street_2,
                     current_work : current_work,
                     wallet_balance: wallet_balance,
                     jobs_remaining : jobs_remaining,
