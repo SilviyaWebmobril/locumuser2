@@ -17,7 +17,8 @@ const HeaderComponent = (props) => {
     console.log("image",(imageSource === null || user_image === null || user_image === "" || imageSource == undefined));
     const user_id  = useSelector(state => props.edit == 1 ? state.register.user.id : state.register.register_id);
     const user_name = useSelector(state=> state.register.register_user_name);
-    const name  = useSelector(state => state.register.user.name);
+    const first_name  = useSelector(state => state.register.user.first_name);
+    const last_name  = useSelector(state => state.register.user.last_name);
     const wallet_balance  = useSelector(state =>state.register.user.wallet_balance);
     console.log("wallet_bal ",wallet_balance);
     
@@ -117,7 +118,7 @@ const HeaderComponent = (props) => {
                     </TouchableOpacity>
 
                   <View style={styles.mainStyle}>
-                        <Text style={styles.userNameStyle}>{(props.value == 1 || props.value == 2) ? name : user_name}</Text>
+                        <Text style={styles.userNameStyle}>{(props.value == 1 || props.value == 2) ? `${first_name} ${last_name}` : user_name}</Text>
                         {props.wallet == 1
                         ?
                         <Text style={styles.wallet_balance_text}>MYR {wallet_balance}</Text>

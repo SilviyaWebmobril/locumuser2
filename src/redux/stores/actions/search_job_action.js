@@ -3,7 +3,7 @@ import Axios from 'axios';
 import ApiUrl from '../../../Globals/ApiUrl';
 import {showMessage} from '../../../Globals/Globals';
 
-export const searchRequestedJobs = (category_id,experience,location,lat,long,user_id,state_id, city_id,navigation) => {
+export const searchRequestedJobs = (category_id,experience,location,lat,long,user_id,state_id, city_id,location_prefrence ,navigation) => {
 
     return dispatch => {
 
@@ -15,6 +15,7 @@ export const searchRequestedJobs = (category_id,experience,location,lat,long,use
         formData.append('job_cat_id', category_id);
         formData.append('experience',"");
         //formData.append('location', location);
+        formData.append("location_preference",location_prefrence)
         formData.append('lat', lat);
 		formData.append('long', long);
         formData.append("user_id",user_id)

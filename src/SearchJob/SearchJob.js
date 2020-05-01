@@ -28,7 +28,7 @@ const SearchJob = (props) => {
     const profession_categories = useSelector(state => state.register.profession_categories);
     const [dropdown_label  ,setDropdownLabel  ] = useState("");
     const [dropdown_value_id , setDropdownId] = useState(0); 
-    const user_location_preference  =useSelector(state => state.register.user.location_preference)
+    //const user_location_preference  =useSelector(state => state.register.user.location_preference)
     const authenticated = useSelector(state => state.auth.authenticated);
     const dispatch = useDispatch();
     const user_id = useSelector(state=>  state.auth.user_id);
@@ -190,21 +190,19 @@ const SearchJob = (props) => {
                             }else{
                                // dispatch(searchRequestedJobs(dropdown_value_id,experience,fulladdress,latitude,longitude,user_id,props.navigation));
                         
-                               let loc_pref;
-                               if(city_id1 || city_id2 ){
-                                   loc_pref = 1;
-                               }else if(toggleSwitch){
-                                   loc_pref = 3;
-                               }else{
-                                   loc_pref = 2;
-                               }
-                                dispatch(searchRequestedJobs(dropdown_value_id,experience,fulladdress,latitude,longitude,user_id,state_id,city_id,props.navigation));
+                               let location_preference = 0;
+                                if(toggleSwitch){
+                                    location_preference = 1;
+                                }
+                                dispatch(searchRequestedJobs(dropdown_value_id,experience,fulladdress,latitude,longitude,user_id,state_id,city_id,location_preference ,props.navigation));
                             }
 
                         })
                     
                    
 
+                }else{
+                    props.navigation.navigate("NoNetwork")
                 }
 
             });

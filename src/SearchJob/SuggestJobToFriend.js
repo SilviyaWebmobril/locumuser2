@@ -174,6 +174,9 @@ const SuggestjobToFriend = (props) => {
         <KeyboardAwareScrollView>
             <View style={styles.container}>
             <TextField
+                labelHeight={15}
+                labelPadding={0}
+                fontSize={14}
                 style={{ width: '90%' }}
                 label='Enter Email id. '
                 value={email}
@@ -225,18 +228,18 @@ const styles = StyleSheet.create({
         paddingLeft:20,
         paddingRight:20,
         paddingTop:0,
+        marginTop:10,
         backgroundColor: '#F2F2F2',
     },
-    submitButton: {
-		width: '100%',
-
+    submitButton: {		
+        width: '100%',
 		paddingTop: 10,
 		paddingBottom: 10,
 		backgroundColor: '#4C74E6',
 		borderRadius: 10,
 		borderWidth: 1,
 		borderColor: '#fff',
-		marginTop: 10,
+		marginTop: 5,
 
 	},
 	submitText: {
@@ -245,7 +248,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		paddingLeft: 10,
 		paddingRight: 10,
-		fontSize: 20,
+		fontSize: 17,
 	},
 	indicator: {
 		flex: 1,

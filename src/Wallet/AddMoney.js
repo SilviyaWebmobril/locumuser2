@@ -290,8 +290,11 @@ const pay = async() => {
 
           <TextField
             style={{ width: '100%' }}
+            labelHeight={15}
+            labelPadding={0}
+            fontSize={14}
             onBlur={()=>{onFocusKeyboard}}
-            label='Enter Amount '
+            label='Enter Amount (RM) '
             value={amount}
             keyboardType='numeric'
             maxLength={8}
@@ -322,7 +325,8 @@ let styles = StyleSheet.create({
       flex: 1,
       backgroundColor: 'white',
       marginLeft:20,
-      marginRight:20
+      marginRight:20,
+      marginTop:20
     
   
     },
@@ -335,7 +339,7 @@ let styles = StyleSheet.create({
       borderRadius: 10,
       borderWidth: 1,
       borderColor: '#fff',
-      marginTop: 40,
+     
   
     },
     submitText: {

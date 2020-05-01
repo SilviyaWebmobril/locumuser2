@@ -18,9 +18,18 @@ const AppliedJobsDetails =(props) => {
     const profile  = useState(props.navigation.getParam('profile'));
     const experience = useState(props.navigation.getParam('experience'));
     const description = useState(props.navigation.getParam('description'));
-    const location = useState(props.navigation.getParam('location'));
+    const joblocation = useState(props.navigation.getParam('location'));
     const from  = useState(props.navigation.getParam('from'));
     console.log('f',from[0]);
+
+    const state = useState(props.navigation.getParam('state'));
+    const city  = useState(props.navigation.getParam('city'));
+    const rm_hour = useState(props.navigation.getParam('rm_hour'));
+    const job_scope  = useState(props.navigation.getParam('job_scope'));
+    const clinic_requirement  = useState(props.navigation.getParam('clinic_requirement'));
+    const dayorhour  = useState(props.navigation.getParam('dayorhour'));
+    const clinic_details  = useState(props.navigation.getParam('clinic_details'));
+
     const to = useState(props.navigation.getParam('to'));
     const date =  useState(props.navigation.getParam('date'));
     const user_id = useSelector(state =>  state.register.user.id);
@@ -100,69 +109,130 @@ const AppliedJobsDetails =(props) => {
     
 
     return(
+        <ScrollView>
         <View style={styles.container}>
             <View style={styles.details}>
+           
+                <View style={styles.viewRow}>
+                   
+                    <Text style={styles.textHeading}>Posted By</Text>
+                    <Text style={styles.textSubheading}>: {clinic_details[0].name}</Text>
+                
+                </View>
                 <View style={styles.viewRow}>
                     {/* <Image source={require('../assets/clinic/manager-avatar.png')}  style={styles.imageStyle} /> */}
 
-                    <View style={{flexDirection:'row'}}>
-                        <Text style={styles.textHeading}>Profile :</Text>
-                        <Text style={styles.textSubheading}>{profile}</Text>
-                    </View>
+                    {/* <View style={{flexDirection:'row',flex:1}}> */}
+                        <Text style={styles.textHeading}>Profile</Text>
+                        <Text style={styles.textSubheading}>: {profile}</Text>
+                    {/* </View> */}
                     
                 </View>
                 <View style={styles.viewRow}>
                     {/* <Image source={require('../assets/clinic/clock2.png')}  style={styles.imageStyle} /> */}
-                    <View style={{flexDirection:'row'}}>
-                        <Text style={styles.textHeading}>Experience : </Text>
-                        <Text style={styles.textSubheading}>{experience} Years</Text>
-                    </View>
+                    {/* <View style={{flexDirection:'row'}}> */}
+                        <Text style={styles.textHeading}>RM Hour</Text>
+                        <Text style={styles.textSubheading}>: {rm_hour} / {dayorhour[0]  == 1 ? "Hour" : "Day"}</Text>
+                    {/* </View> */}
                 </View>
                 
                 <View style={styles.viewRow}>
                     {/* <Image source={require('../assets/clinic/manager-avatar.png')}  style={styles.imageStyle} /> */}
-                    <View style={{flexDirection:'row'}}>
-                        <Text style={styles.textHeading}>Required Date : </Text>
-                        <Text style={styles.textSubheading}>{date}</Text>
-                    </View>
+                    {/* <View style={{flexDirection:'row'}}> */}
+                        <Text style={styles.textHeading}>Required {'\n'} Date</Text>
+                        <Text style={styles.textSubheading}>: {date}</Text>
+                    {/* </View> */}
                 </View>
-                {((from[0]) && (to[0]))
-                ?
-                <View style={[styles.viewRow,{justifyContent:'space-between',}]}>
+                
+                <View style={styles.viewRow}>
+                    
+                    {/* <View style={{flexDirection:'row'}}> */}
+                    {/* <Image source={require('../assets/clinic/map.png')}  style={styles.imageStyle} /> */}
+                        <Text style={styles.textHeading}>State</Text>
+                        <Text style={styles.textSubheading} >: {state}</Text>
+                    {/* </View> */}
+                    
+                </View>
+                <View style={styles.viewRow}>
+                    
+                    {/* <View style={{flexDirection:'row'}}> */}
+                    {/* <Image source={require('../assets/clinic/map.png')}  style={styles.imageStyle} /> */}
+                        <Text style={styles.textHeading}>City</Text>
                         
-                    <View style={{flexDirection:'row'}}>
+                    {/* </View> */}
+                    {city[0] == ""
+                    ?
+                    <Text style={styles.textSubheading} >: {state}</Text>
+                    :
+                    <Text style={styles.textSubheading} >: {city}</Text>
+                    }
+                   
+                </View>
+                {(from[0] !== "" && to[0] !== "")
+                ?
+                <View style={[styles.viewRow,{justifyContent:'space-between',alignItems:"center",flex:1}]}>
+                        
+                    <View style={{flexDirection:'row',alignSelf:"flex-start",flex:0.5}}>
                     {/* <Image source={require('../assets/clinic/manager-avatar.png')}  style={styles.imageStyle} /> */}
-                        <Text style={styles.textHeading}>From : </Text>
-                        <Text style={styles.textSubheading}>{from}</Text>
+                        <Text style={styles.textHeadingFrom}>From</Text>
+                        <Text style={styles.textSubheading}>: {from}</Text>
                     </View>
                 
-                    <View style={{flexDirection:'row'}}>
+                    <View style={{flexDirection:'row',alignSelf:"flex-end",flex:0.5}}>
                         {/* <Image source={require('../assets/clinic/manager-avatar.png')}  style={styles.imageStyle} /> */}
-                        <Text style={styles.textHeading}>To : </Text>
-                        <Text style={styles.textSubheading}>{to}</Text>
+                        <Text style={styles.textHeadingFrom}>To </Text>
+                        <Text style={styles.textSubheading}>: {to}</Text>
                     </View>
                 </View>
                 :
                 <View/>
                 }
+
                
-                <View style={styles.viewRow}>
-                    
-                    <View style={{flexDirection:'row'}}>
-                    <Image source={require('../assets/clinic/map.png')}  style={styles.imageStyle} />
-                        <Text style={styles.textHeading}>Location : </Text>
-                        
-                    </View>
-                    <Text style={styles.locationText} numberOfLines={2}>{location}</Text>
-                </View>
-               
-              
             </View>
             <Card 
-            title="Description"
-            containerStyle={{width:'95%',height:null,elevation:5,borderRadius:4}} >
-                <Text numberOfLines={2} style={styles.dsepText}>{description}</Text>
+            title="Other Details"
+            containerStyle={{width:'97%',height:null,elevation:5,borderColor:'#a7bbfa',borderRadius:4}} >
+                 <View style={{flexDirection:"row"}}>
+                    <Text style={styles.despHeading}>Job Location</Text>
+                    <Text numberOfLines={20} style={styles.dsepText}>: {joblocation}</Text>
+                </View>
+                <View style={{width:"100%",borderWidth:0.25,marginTop:10,marginBottom:10,backgroundColor:"#ececec"}}></View>
+                <View style={{flexDirection:"row"}}>
+                    <Text style={styles.despHeading}>Description</Text>
+                    <Text numberOfLines={20} style={styles.dsepText}>: {description}</Text>
+                </View>
                
+                {
+                    job_scope !== ""
+                    ?
+                    <>
+                     <View style={{width:"100%",borderWidth:0.25,marginTop:10,marginBottom:10,backgroundColor:"#ececec"}}></View>
+                    <View style={{flexDirection:"row"}}>
+                        <Text style={styles.despHeading}>Job Scope</Text>
+                        <Text numberOfLines={20} style={styles.dsepText}>: {job_scope}</Text>
+                    </View>
+                    
+                     </>
+                    :
+                    <View/>
+                }
+
+                {
+                    clinic_requirement !== ""
+                    ?
+                    <>
+                     <View style={{width:"100%",borderWidth:0.25,marginTop:10,marginBottom:10,backgroundColor:"#ececec"}}></View>
+                    <View style={{flexDirection:"row"}}>
+                        <Text style={styles.despHeading}>Clinic / {'\n'} Hospital {'\n'} Requirement</Text>
+                        <Text numberOfLines={20} style={styles.dsepText}>: {clinic_requirement}</Text>
+                    </View>
+                   
+                    </>
+                    :
+                    <View/>
+                }
+                
             </Card>
             {application_status[0] ==  0
             ?
@@ -184,6 +254,7 @@ const AppliedJobsDetails =(props) => {
 
 
         </View>
+        </ScrollView>
     )
 }
 
@@ -208,7 +279,8 @@ let styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'flex-start',
         alignItems:'center',
-        marginBottom:15
+        marginBottom:15,
+        flex:1,
     },
     details:{
 
@@ -221,10 +293,18 @@ let styles = StyleSheet.create({
     },
     textHeading:{
         color:'white',
-        fontSize:15,
+        fontSize:14,
         fontFamily:"roboto-bold",
-        paddingLeft:10,
-
+        paddingLeft:5,
+        flex:0.25,
+       // backgroundColor:"yellow"
+    },
+    textHeadingFrom :{
+        color:'white',
+        fontSize:14,
+        fontFamily:"roboto-bold",
+        paddingLeft:5,
+        //flex:0.27,
     },
     locationText:{
         fontFamily:'roboto-bold',
@@ -238,13 +318,21 @@ let styles = StyleSheet.create({
         color:'white',
         fontSize:15,
         fontFamily:'roboto-light',
-        paddingLeft:10
+        paddingLeft:10,
+        flex:0.73,
     },
     dsepText:{
         fontSize:14,
         color:"black",
         fontFamily:'roboto-light',
-        marginBottom:20
+        marginBottom:20,
+        flex:4
+    },
+    despHeading:{
+        fontSize:13,
+        color:"grey",
+        fontFamily:'roboto-bold',
+        flex:2
     },
 	submitButton:{
         width:'40%',

@@ -43,80 +43,82 @@ const JobList = (props) => {
        
     }
 
+    const emptyList = () => {
+        return(
+            <Text style={{flex:1,fontFamily:'roboto-bold',fontSize:15,color:'grey',alignSelf:'center',margin:10}}>No Jobs Found</Text>
+        )
+    }
+
     return(
-            <ScrollView>
                 <View style={styles.container}>
-                    {searched_job_list.length > 0 
-                    ?
+                  
                     <FlatList
-                            contentContainerStyle={{ paddingBottom:10}}
-                            
+                            contentContainerStyle={{ paddingBottom:10,backgroundColor: '#F2F2F2'}}
+                            ListEmptyComponent={emptyList()}
 							data={searched_job_list}
 							showsVerticalScrollIndicator={false}
-							scrollEnabled={false}
 							renderItem={({ item }) =>
 
-                            <TouchableOpacity onPress={()=> {
-                                console.log("from",item);
-                                console.log("to",item.to_time);
-                                props.navigation.navigate('JobDetails',{"id" :item.jobid ,
-                                    "profile" : item.name , "experience" :item.exp_required , "location": item.job_location,
-                                    "date" : item.required_date , "description" : item.job_desc , "cid" : item.cid ,
-                                     "from" : item.from_time , "to" : item.to_time,'application_status':item.application_status,
-                                    // "clinic_details" : item.clinic,
-                                     fetch : fetchAgain
-
-                                 })}}>
-                            
-                                <Card containerStyle={{ borderColor:'#ececec',padding:1,borderRadius: 5,  elevation:5,}}
-                                wrapperStyle={{flexDirection:'row',}}
+                         
+                                <View style={{ borderColor:'#ececec',width:"95%",borderRadius:2,marginTop:5,marginBottom:5, backgroundColor: '#F2F2F2',  elevation:2,padding:1,alignSelf:"center"}}
                                 >
+                                       <TouchableOpacity style={{alignSelf:"center",flexDirection:"row", backgroundColor: '#F2F2F2',}} onPress={()=> {
+                                            console.log("from",item);
+                                            console.log("to",item.to_time);
+                                            props.navigation.navigate('JobDetails',{"id" :item.id ,
+                                                "profile" : item.name , "experience" :item.exp_required , "location": item.job_location,
+                                                "date" : item.required_date , "description" : item.job_desc , "cid" : item.cid ,
+                                                "from" : item.from_time , "to" : item.to_time,'application_status':item.application_status,
+                                                 "clinic_details" : item.clinic, "state" : item.state_name , "city": item.city_name,"job_scope":item.job_scope,
+                                                 "clinic_requirement" :item.clinic_requirement,"rm_hour": item.rm_hour, "dayorhour": item.dayorhour,
+                                                fetch : fetchAgain
+
+                                            })}}>
+                            
                                  
                                         <View style={styles.purpleView}>
-                                            <Text style={{fontFamily:'roboto-bold', color: 'white',fontSize:15, }}> {getWeekday(item.required_date)}</Text>
-                                            <Text style={{fontFamily:'roboto-bold', color: 'white' ,fontSize:20}}> {getday(item.required_date)}</Text>
-                                            <Text style={{fontFamily:'roboto-bold', color: 'white' ,fontSize:15,}}> {getMonth(item.required_date)} {getYear(item.required_date)}</Text>
-                                            {
-                                            item.from_time !== "" 
-                                            ?
-                                            <Text style={{fontFamily:'roboto-bold',fontSize:15, color: 'white',marginTop:10 }}>{item.from_time}</Text>
+                                            <Text style={{fontFamily:'roboto-bold', color: 'white',fontSize:14,marginBottom:2 }}>#JOB{item.jobid}</Text>
+                                            {/* <Text style={{fontFamily:'roboto-bold', color: 'white',fontSize:15, }}></Text>
+                                            <Text style={{fontFamily:'roboto-bold', color: 'white' ,fontSize:20}}> {getday(item.required_date)}</Text> */}
+                                            <Text style={{fontFamily:'roboto-bold', color: 'white' ,fontSize:12,}}>  {getWeekday(item.required_date)} {getMonth(item.required_date)} {getYear(item.required_date)}</Text>
+                                        
+                                        </View>
+                                        <View style={styles.whiteView}>
+                                            {/* <Text numberOfLines={2} style={styles.detailsText}>Location : {item.job_location}</Text>  */}
+                                             {/*<Text numberOfLines={2} style={styles.detailsText}>Description : {item.job_desc}</Text> */}
+                                             <Text style={styles.detailsText}>Rates : RM {item.rm_hour}/{item.dayorhour ==  1 ? "Hour" : "Day" }</Text>
+                                             
+                                            <Text style={styles.detailsText}>Time : {item.from_time} - {item.to_time}</Text>
+                                              
+                                            {item.distance 
+                                            ? 
+                                             <Text numberOfLines={1} style={styles.detailsText}>Distance : {parseFloat(item.distance).toFixed(2)} km</Text>
                                             :
                                             <View/>
                                             }
-
-                                        </View>
-                                        <View style={styles.whiteView}>
-                                            <Text numberOfLines={2} style={styles.detailsText}>Location : {item.job_location}</Text>
-                                            <Text numberOfLines={2} style={styles.detailsText}>Description : {item.job_desc}</Text>
-                                            <Text numberOfLines={1} style={styles.detailsText}>Distance : {parseFloat(item.distance).toFixed(2)} km</Text>
+                                           
                                             
-                                            {item.application_status ==  1 
+                                            {/* {item.application_status ==  1 
                                             ?
                                                 <Text style={styles.applied_status_text}>Applied</Text>
                                             :
                                                 <View/>
-                                            }
+                                            } */}
                                         </View>
                                        
                                   
-                                   
-                                    {/* <Text style={{fontFamily:'roboto-bold', color: '#009AFF',textAlign:'right' ,marginBottom:3}}>Apply</Text> */}
+                                    </TouchableOpacity>
+                                    
 
-                                </Card>
+                                </View>
                                 
-                            </TouchableOpacity>
+                          
 							}
 							keyExtractor={item => item.id}
 						/>
-                    :
-                        <Text style={{flex:1,fontFamily:'roboto-bold',fontSize:15,color:'grey',alignSelf:'center',margin:10}}>No Jobs Found</Text>
-                    }
+                    
 
             </View>
-
-            </ScrollView>
-            
-        
        
     )
 }
@@ -124,8 +126,7 @@ const JobList = (props) => {
 const styles = StyleSheet.create({
 
     container: {
-        width:"100%",
-        height:"100%",
+        flex:1,
         backgroundColor: '#F2F2F2',
     },
     cardContainer:{
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius:5,
         borderBottomLeftRadius:5,
         padding:5,
-        flex:1.5,
+        flex:2.5,
         height:null,
         backgroundColor:'#4C74E6',
         justifyContent:'center',
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
     },
     whiteView:{
         paddingLeft:10,
-        paddingTop:10,
+        paddingTop:5,
         paddingRight:5, 
         borderBottomRightRadius:5,
         borderTopRightRadius:5,
@@ -176,9 +177,9 @@ const styles = StyleSheet.create({
     },
     detailsText:{
         color:'grey',
-        fontSize:14,
+        fontSize:12,
         fontFamily:'roboto-bold',
-        marginBottom:5,
+        //marginBottom:5,
         lineHeight:20
     },
     applied_status_text:{

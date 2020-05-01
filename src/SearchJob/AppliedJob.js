@@ -86,6 +86,8 @@ const AppliedJob = (props) => {
                         "profile" : item.job_detail.profile.name , "experience" :item.job_detail.exp_required , "location": item.job_detail.job_location,
                         "date" : item.job_detail.required_date , "description" : item.job_detail.job_desc , "cid" : item.job_detail.cid ,
                          "from" : item.job_detail.from_time , "to" : item.job_detail.to_time,"application_status":item.application_status,"appid":item.id,
+                         "clinic_details" : item.clinic_name, "state" : item.job_detail.state_name , "city": item.job_detail.city_name,"job_scope":item.job_detail.job_scope,
+                         "clinic_requirement" :item.job_detail.clinic_requirement,"rm_hour": item.job_detail.rm_hour, "dayorhour": item.job_detail.dayorhour,
                          load :loadAgain
                     })
 
@@ -118,24 +120,27 @@ const AppliedJob = (props) => {
                                 </View>
 
                             </View>
-                            {item.application_status == 0
-                                ?
-                                <Text numberOfLines={2} style={{ color: 'red', fontSize: 13, marginBottom: 10,  marginTop: 5, fontWeight: "bold", textAlign: "left",flex:1, fontFamily:'Roboto-Light'}}>  Not Reviewed  </Text>
-                                :
-                                (item.application_status == 2
-                                    ?
-                                    <Text style={{ color: 'black', fontSize: 13, marginBottom: 10, marginTop: 5, fontWeight: "bold", textAlign: "left",fontFamily:'Roboto-Light' }}>  Rejected  </Text>
-                                    :
-                                    <Text style={{ fontSize: 13, marginBottom: 10,fontWeight: "bold", marginTop: 5, color: "#5AA86C", textAlign: "left",flex:1,fontFamily:'Roboto-Light' }}>  Approved  </Text>
-                                )
-                            }
+                           
 
                               <View style={{ flexDirection: "row", justifyContent:"space-between",alignItems:"center", marginBottom: 5, marginLeft: 0 }}>
                                     <Text style={{ fontSize: 13 ,fontFamily:'roboto-bold',color:"grey"}}>Applied Date : </Text>
                                     <Text style={{ fontSize: 12, marginLeft: 5, marginTop: 2,fontFamily:'roboto-light',alignSelf:'flex-end' }}>  {item.created_at.split(' ')[0]}  </Text>
                                 </View>
+                                <View style={{ flexDirection: "row", justifyContent:"space-between",alignItems:"center", marginBottom: 5, marginLeft: 0 }}>
+                                {item.application_status == 0
+                                ?
+                                <Text numberOfLines={2} style={{ color: 'red', fontSize: 13, marginBottom: 2,  marginTop: 5,alignSelf:"flex-start", textAlign: "left",flex:1, fontFamily:'roboto-bold'}}>  Not Reviewed  </Text>
+                                :
+                                (item.application_status == 2
+                                    ?
+                                    <Text style={{ color: 'black', fontSize: 13, marginBottom: 2, marginTop: 5,alignSelf:"flex-start", textAlign: "left",fontFamily:'roboto-bold' }}>  Rejected  </Text>
+                                    :
+                                    <Text style={{ fontSize: 13, marginBottom: 2,alignSelf:"flex-start", marginTop: 5, color: "#5AA86C", textAlign: "left",flex:1,fontFamily:'roboto-bold' }}>  Approved  </Text>
+                                )
+                                }
                              
-                            <Text style={{ fontSize: 14, marginLeft: 5, marginTop: 2, textAlign: "right", color: "#4C74E6" ,fontFamily:'Roboto-Light'}}>  View Details  >>  </Text>
+                            <Text style={{ fontSize: 14, marginTop: 2, textAlign: "right", color: "#4C74E6" ,fontFamily:'roboto-Light'}}>  View Details  >>  </Text>
+                            </View>
 
                         </Card>
                     </TouchableOpacity>

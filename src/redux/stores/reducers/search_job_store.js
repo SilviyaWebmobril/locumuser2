@@ -43,7 +43,9 @@ export default ( state = initialState  , action ) => {
                 element.to_time = to_hr_min;
                 Object.assign(element ,{coordinates :{latitude : parseFloat(element.latitude) , longitude : parseFloat(element.longitude), latitudeDelta: 0.23,longitudeDelta: 0.5,}} )
 
-            })
+            });
+
+            console.log("job list final",joblist);
            
 
             return {

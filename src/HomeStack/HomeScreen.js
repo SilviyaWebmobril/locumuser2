@@ -10,7 +10,10 @@ import {userDevicetoken,fetchJobCategories} from '../redux/stores/actions/regist
 const HomeScreen =(props)  => {
 
     const token = useSelector(state => state.auth.device_token);
+    const post_available =  useSelector(state => state.register.user.jobs_remaining)
+    const wallet_balance =  useSelector(state => state.register.user.wallet_balance)
     const dispatch =  useDispatch();
+
    
     const  onTokenRefreshListener =()=>  firebase.messaging().onTokenRefresh(fcmToken => {
         // Process your token as required
@@ -201,15 +204,34 @@ const HomeScreen =(props)  => {
                
                 <Card containerStyle={styles.cardContainerStyle}>  
                     <TouchableOpacity onPress={()=>{
-                   props.navigation.navigate("SearchJob")
+                      
+                      if(post_available == 0 && wallet_balance == 0){
+
+                        showMessage(0,"Please add money and buy packages to post a new job.", 'Profile', true, false);
+
+                    }else{
+                        props.navigation.navigate("SearchJob")
+                    }
+                  
+                
                    }}>
                     <Image source={require('../assets/clinic/search.png')}  style={styles.imageStyle}  />
                     <Text style={styles.textStyle}>Search Job</Text>
                     </TouchableOpacity>
                 </Card>
+
+                <Card 
+                containerStyle={styles.cardContainerStyle}>
+                        <TouchableOpacity onPress={()=>{
+                    props.navigation.navigate("ContactAdmin")
+                    }}>
+                    <Image source={require('../assets/clinic/4.png')} style={styles.imageStyle} />
+                    <Text style={styles.textStyle} >Feedback</Text>
+                    </TouchableOpacity>
+                </Card>
+                
               
-              
-               <Card 
+               {/* <Card 
                 containerStyle={styles.cardContainerStyle}>
                      <TouchableOpacity onPress={()=>{
                    props.navigation.navigate("Packages")
@@ -217,11 +239,11 @@ const HomeScreen =(props)  => {
                     <Image source={require('../assets/doctor/package.png')} style={styles.imageStyle1} />
                    <Text style={styles.textStyle} >Buy Packages</Text>
                    </TouchableOpacity>
-               </Card>
+               </Card> */}
 
            </View>
 
-           <View style={styles.viewRow}>
+           {/* <View style={styles.viewRow}>
                
                <Card containerStyle={styles.cardContainerStyle}>  
                    <TouchableOpacity onPress={()=>{
@@ -243,7 +265,7 @@ const HomeScreen =(props)  => {
                   </TouchableOpacity>
               </Card>
 
-          </View>
+          </View> */}
         
         </View>
     )

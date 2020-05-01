@@ -172,7 +172,7 @@ const EditProfile = (props) => {
             
             if(id  ===  element.value) {
                 setStateId(element.value);
-                
+                let state_name =  element.label;
                 setStateLabel(element.label);
                 NetInfo.isConnected.fetch().then(isConnected => {
 
@@ -199,6 +199,8 @@ const EditProfile = (props) => {
 
                                 })
                               
+                            }else{
+                                setCityLabel(state_name)
                             }
                            
 
@@ -291,19 +293,44 @@ const EditProfile = (props) => {
 			showMessage(0, 'Enter your specialities', 'Profile', true, false);
 
 			return false
-		}
-		// else if (grades_id.length === 0) {
+        }
+        else if (degree.length === 0) {
 
-		// 	showMessage(0, 'Enter your grades', 'Profile', true, false);
-
-		// 	return false
-		// }
-		else if (degree.length === 0) {
-
-			showMessage(0, 'Enter  your degree', 'Profile', true, false);
+			showMessage(0, 'Enter your degree', 'Profile', true, false);
 
 			return false;
+        }
+        else if (state_id.length === 0) {
+
+			showMessage(0, 'Select State', 'Profile', true, false);
+
+			return false
+        }
+        // else if (state_id.length === 0) {
+
+		// 	showMessage(0, 'Select State', 'Profile', true, false);
+
+		// 	return false
+        // }
+		else if (street_1.length === 0) {
+
+			showMessage(0, 'Enter Street 1', 'Profile', true, false);
+
+			return false
+        }
+        else if (street_2.length === 0) {
+
+			showMessage(0, 'Enter Street 2', 'Profile', true, false);
+
+			return false
+        }
+        else if (post_code.length === 0) {
+
+			showMessage(0, 'Enter your Postcode', 'Profile', true, false);
+
+			return false
 		}
+		
 		// else if (user_address.length === 0) {
 
 		// 	showMessage(0, 'Enter  your Adrress', 'Profile', true, false);
@@ -599,9 +626,10 @@ const EditProfile = (props) => {
                     labelHeight={15}
                     labelPadding={0}
                     fontSize={14}
-                    style={{ alignSelf: 'center',}}
+                    style={{ alignSelf: 'center',color:"grey"}}
                     label='MMC/MDC/NBM/PBM Number'
                     value={mmc_no}
+                    editable={false}
                     onChangeText={(value) => setMmcNo(value)}
                 />
 
@@ -609,9 +637,10 @@ const EditProfile = (props) => {
                     labelHeight={15}
                     labelPadding={0}
                     fontSize={14}
-                    style={{ alignSelf: 'center',}}
+                    style={{ alignSelf: 'center',color:"grey"}}
                     label='Valid APC Number'
                     value={apc_no}
+                    editable={false}
                     onChangeText={(value) => setApcNo(value)}
                 />
 
@@ -620,9 +649,10 @@ const EditProfile = (props) => {
                     labelHeight={15}
                     labelPadding={0}
                     fontSize={14}
-                    style={{ alignSelf: 'center', }}
+                    style={{ alignSelf: 'center',color:"grey" }}
                     label='IC Number'
                     value={ic_no}
+                    editable={false}
                     onChangeText={(ic_no) => setIcNo(ic_no)}
 
                 /> 
