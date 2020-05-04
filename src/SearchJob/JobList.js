@@ -18,31 +18,7 @@ const JobList = (props) => {
     const user_id = useSelector(state =>  state.register.user.id);;
 
 
-    const fetchAgain = () => {
-
-        dispatch(checkuserAuthentication(user_id,device_token))
-                .then(response => {
-                    if(response.data.error){
-                        showMessage(0, 'Session Expired! Please Login.', 'Job List', true, false);
-                        dispatch(logoutUser());
-                        props.navigation.navigate("Login")
-                        const resetAction = StackActions.reset({
-                            index: 0,
-                            key: 'Login',
-                            actions: [NavigationActions.navigate({ routeName: 'Login' })],
-                        });
-                        props.navigation.dispatch(resetAction);
-
-                    }else{
-                        //
-                        //dispatch(suggested_jobs_list(user_id))
-
-
-                    }
-                })
-       
-    }
-
+   
     const emptyList = () => {
         return(
             <Text style={{flex:1,fontFamily:'roboto-bold',fontSize:15,color:'grey',alignSelf:'center',margin:10}}>No Jobs Found</Text>
@@ -71,7 +47,7 @@ const JobList = (props) => {
                                                 "from" : item.from_time , "to" : item.to_time,'application_status':item.application_status,
                                                  "clinic_details" : item.clinic, "state" : item.state_name , "city": item.city_name,"job_scope":item.job_scope,
                                                  "clinic_requirement" :item.clinic_requirement,"rm_hour": item.rm_hour, "dayorhour": item.dayorhour,
-                                                fetch : fetchAgain
+                                               
 
                                             })}}>
                             
@@ -80,7 +56,7 @@ const JobList = (props) => {
                                             <Text style={{fontFamily:'roboto-bold', color: 'white',fontSize:14,marginBottom:2 }}>#JOB{item.jobid}</Text>
                                             {/* <Text style={{fontFamily:'roboto-bold', color: 'white',fontSize:15, }}></Text>
                                             <Text style={{fontFamily:'roboto-bold', color: 'white' ,fontSize:20}}> {getday(item.required_date)}</Text> */}
-                                            <Text style={{fontFamily:'roboto-bold', color: 'white' ,fontSize:12,}}>  {getWeekday(item.required_date)} {getMonth(item.required_date)} {getYear(item.required_date)}</Text>
+                                            <Text style={{fontFamily:'roboto-bold', color: 'white' ,fontSize:12,}}>  {getday(item.required_date)} {getMonth(item.required_date)} {getYear(item.required_date)}</Text>
                                         
                                         </View>
                                         <View style={styles.whiteView}>

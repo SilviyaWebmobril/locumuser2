@@ -131,8 +131,8 @@ const AppliedJobsDetails =(props) => {
                 <View style={styles.viewRow}>
                     {/* <Image source={require('../assets/clinic/clock2.png')}  style={styles.imageStyle} /> */}
                     {/* <View style={{flexDirection:'row'}}> */}
-                        <Text style={styles.textHeading}>RM Hour</Text>
-                        <Text style={styles.textSubheading}>: {rm_hour} / {dayorhour[0]  == 1 ? "Hour" : "Day"}</Text>
+                        <Text style={styles.textHeading}>Rates</Text>
+                        <Text style={styles.textSubheading}>: RM {rm_hour} / {dayorhour[0]  == 1 ? "Hour" : "Day"}</Text>
                     {/* </View> */}
                 </View>
                 
@@ -153,21 +153,17 @@ const AppliedJobsDetails =(props) => {
                     {/* </View> */}
                     
                 </View>
-                <View style={styles.viewRow}>
-                    
-                    {/* <View style={{flexDirection:'row'}}> */}
-                    {/* <Image source={require('../assets/clinic/map.png')}  style={styles.imageStyle} /> */}
-                        <Text style={styles.textHeading}>City</Text>
-                        
-                    {/* </View> */}
-                    {city[0] == ""
+                {(city[0] !== "")
                     ?
-                    <Text style={styles.textSubheading} >: {state}</Text>
-                    :
-                    <Text style={styles.textSubheading} >: {city}</Text>
-                    }
+                <View style={styles.viewRow}>
+                   
+                    <Text style={styles.textHeading}>City</Text>
+                    <Text style={styles.textSubheading} >:  {city}</Text>
                    
                 </View>
+                :
+                <View/>
+                }
                 {(from[0] !== "" && to[0] !== "")
                 ?
                 <View style={[styles.viewRow,{justifyContent:'space-between',alignItems:"center",flex:1}]}>
@@ -204,7 +200,7 @@ const AppliedJobsDetails =(props) => {
                 </View>
                
                 {
-                    job_scope !== ""
+                    (job_scope[0] !== "" && job_scope[0] !== null)
                     ?
                     <>
                      <View style={{width:"100%",borderWidth:0.25,marginTop:10,marginBottom:10,backgroundColor:"#ececec"}}></View>
@@ -219,7 +215,7 @@ const AppliedJobsDetails =(props) => {
                 }
 
                 {
-                    clinic_requirement !== ""
+                    (clinic_requirement[0] !== "" && clinic_requirement[0] !== null)
                     ?
                     <>
                      <View style={{width:"100%",borderWidth:0.25,marginTop:10,marginBottom:10,backgroundColor:"#ececec"}}></View>

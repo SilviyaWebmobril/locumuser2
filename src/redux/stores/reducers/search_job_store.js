@@ -37,7 +37,14 @@ export default ( state = initialState  , action ) => {
 				}else{
 					last_index_to  = element.to_time.lastIndexOf(":");
 					to_hr_min = element.to_time.substring(0,last_index_to)
-				}
+                }
+                if(element.job_scope ==  null) {
+                    element.job_scope = "";
+                }
+                if(element.clinic_requirement == null ){
+                    element.clinic_requirement = "";
+                }
+
 
                 element.from_time = from_hr_min ;
                 element.to_time = to_hr_min;
@@ -71,7 +78,7 @@ export default ( state = initialState  , action ) => {
         case ActionTypes.CHANGED_STATUS_TO_APPLIED  :
             let job_list = [...state.search_jobs_list];
             job_list.map(element => {
-                if(element.jobid == action.job_id){
+                if(element.id == action.job_id){
                     element.application_status = 1;
                 }
             });

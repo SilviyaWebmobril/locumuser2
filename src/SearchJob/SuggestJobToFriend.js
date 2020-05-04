@@ -25,80 +25,87 @@ const SuggestjobToFriend = (props) => {
 
     const onSearch = () => {
 
-        NetInfo.isConnected.fetch().then(isConnected => {
-            if (!isConnected) {
-                props.navigation.navigate("NoNetwork")
-                return;
-            }else{
 
-                dispatch(checkuserAuthentication(user_id,device_token))
-                    .then(response =>{ 
+        if(isValid()){
 
-                        if(response.data.error){
-                            showMessage(0, 'Session Expired! Please Login.', 'Suggest Job To Friend', true, false);
-                            dispatch(logoutUser());
-                            props.navigation.navigate("Login")
-                            const resetAction = StackActions.reset({
-                                index: 0,
-                                key: 'Login',
-                                actions: [NavigationActions.navigate({ routeName: 'Login' })],
-                            });
-                            props.navigation.dispatch(resetAction);
+            NetInfo.isConnected.fetch().then(isConnected => {
+                if (!isConnected) {
+                    props.navigation.navigate("NoNetwork")
+                    return;
+                }else{
+    
+                    dispatch(checkuserAuthentication(user_id,device_token))
+                        .then(response =>{ 
+    
+                            if(response.data.error){
+                                showMessage(0, 'Session Expired! Please Login.', 'Suggest Job To Friend', true, false);
+                                dispatch(logoutUser());
+                                props.navigation.navigate("Login")
+                                const resetAction = StackActions.reset({
+                                    index: 0,
+                                    key: 'Login',
+                                    actions: [NavigationActions.navigate({ routeName: 'Login' })],
+                                });
+                                props.navigation.dispatch(resetAction);
+    
+                            }else{
+    
+                                let formData = new FormData();
+                                formData.append('keyword', email);
+                                formData.append('user_id', user_id);
+                                setLoadingStatus(true)
+                                Axios.post(ApiUrl.base_url+ ApiUrl.search_user,formData)
+                                    .then(response =>{
+                                        setLoadingStatus(false);
+                                        console.log("respp",response.data);
+                                        if(response.data.status == 'success'){
+                                            
+                                           
+                                            setUserList(response.data.data);
+                                           // showMessage(0,response.data.message,'Suggest Jobs', true,false); 
+                        
+                                        }else{
+                                            showMessage(0,response.data.message,'Suggest Job', true,false); 
+                                        }
+                        
+                                    })
+                                    .catch(error =>{
+                                        console.log("erroor",error)
+                                        showMessage(0,'Something went wrong. Please try again later !', 'Suggest Job', true, false);
+                                    })
+                        
+    
+                            }
+                        });
+                }
+            });
+    
 
-                        }else{
-
-                            let formData = new FormData();
-                            formData.append('keyword', email);
-                            formData.append('user_id', user_id);
-                            setLoadingStatus(true)
-                            Axios.post(ApiUrl.base_url+ ApiUrl.search_user,formData)
-                                .then(response =>{
-                                    setLoadingStatus(false);
-                                    console.log("respp",response.data);
-                                    if(response.data.status == 'success'){
-                                        
-                                       
-                                        setUserList(response.data.data);
-                                       // showMessage(0,response.data.message,'Suggest Jobs', true,false); 
-                    
-                                    }else{
-                                        showMessage(0,response.data.message,'Suggest Job', true,false); 
-                                    }
-                    
-                                })
-                                .catch(error =>{
-                                    showMessage(0,'Something went wrong. Please try again later !', 'Suggest Job', true, false);
-                                })
-                    
-
-                        }
-                    });
-            }
-        });
-
+        }
+       
        
     }
 
     const isValid = () => {
 
 
-		let valid = false;
-
-		if (email.length > 0) {
-			valid = true;
-		}
-
-		if (email.length === 0) {
+		let valid = true;
+        if (email.length == 0) {
 			showMessage(0, 'Enter an email', 'Suggest Job', true, false);
 
 			return false
-		}
+		}else if(!(/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(
+            email))){
+                showMessage(0, 'Enter valid email', 'Suggest Job', true, false);
+                return false
+        } 
 
 
-		return valid;
+		return true;
 	}
 
     const onTransfer = (item) => {
+        
 
      
 		if (isValid()) {
@@ -127,7 +134,8 @@ const SuggestjobToFriend = (props) => {
                                 formData.append('user_id', user_id);
                                 formData.append('job_id', job_id);
                                 formData.append('to_id', item.id);
-                              
+                                formData.append("email",email);
+                                console.log("form on transfer",formData);
                                 Axios.post(ApiUrl.base_url+ApiUrl.transfer_job,formData)
                                 .then(response =>{
                                     setLoadingStatus(false);
@@ -145,7 +153,7 @@ const SuggestjobToFriend = (props) => {
                                 })
                                 .catch(error => {
             
-                                    console.log("er",error);
+                                    console.log("er on transfer",error);
                                     showMessage(0,'Something went wrong. Please try again later !', 'Suggest Job', true, false);
                                 })
 

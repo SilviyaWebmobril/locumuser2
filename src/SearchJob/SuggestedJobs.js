@@ -71,11 +71,14 @@ const SuggestedJobs = (props) => {
     const next = (item) => {
 
         console.log("itemm by suvggested..",item);
-        props.navigation.navigate('JobDetails',{"id" :item.job_id ,
-        "profile" : item.job.name , "experience" :item.job.exp_required , "location": item.job.job_location,
+        props.navigation.navigate('JobDetails',{"id" :item.job.id ,
+        "profile" : item.job.profile.name , "experience" :item.job.exp_required , "location": item.job.job_location,
         "date" : item.job.required_date , "description" : item.job.job_desc , "cid" : item.job.cid ,
-            "from" : item.job.from_time , "to" : item.job.to_time,'application_status':item.applied_status,
-            //"clinic_details" : item.clinic,
+        "from" : item.job.from_time , "to" : item.job.to_time,'application_status':item.application_status,
+         "clinic_details" : item.job.clinic, "state" : item.job.state_name , "city": item.job.city_name,"job_scope":item.job.job_scope,
+         "clinic_requirement" :item.job.clinic_requirement,"rm_hour": item.job.rm_hour, "dayorhour": item.job.dayorhour,
+       
+
             fetch : fetchAgain
 
         })

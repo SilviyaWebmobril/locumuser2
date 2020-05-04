@@ -24,6 +24,7 @@ const JobDetails =(props) => {
     const city  = useState(props.navigation.getParam('city'));
     const rm_hour = useState(props.navigation.getParam('rm_hour'));
     const job_scope  = useState(props.navigation.getParam('job_scope'));
+    console.log("job_scope",job_scope);
     const clinic_requirement  = useState(props.navigation.getParam('clinic_requirement'));
      const dayorhour  = useState(props.navigation.getParam('dayorhour'));
      const clinic_details  = useState(props.navigation.getParam('clinic_details'));
@@ -68,7 +69,24 @@ const JobDetails =(props) => {
                         .then(response =>{
                             if(response ==  1){
                                 changeApplicatonStatus(1);
-                                props.navigation.state.params.fetch();
+                               
+                                Alert.alert(
+                                    'Job Application',
+                                    'Thank You for applying. We will contact you shortly.',
+                                    [
+                                       
+                                        {
+                                            text: 'OK',
+                                            onPress: () => {console.log("ok")}
+                                        }
+                                    ],
+                                    {
+                                        cancelable: false
+                                    }
+                                );
+                                if(props.navigation.state.params.fetch !== undefined){
+                                    props.navigation.state.params.fetch();
+                                }
                             }
                         })
 
@@ -172,15 +190,15 @@ const JobDetails =(props) => {
 
                     {/* <View style={{flexDirection:'row',flex:1}}> */}
                         <Text style={styles.textHeading}>Profile</Text>
-                        <Text style={styles.textSubheading}>: {profile}</Text>
+                        <Text style={styles.textSubheading}>:  {profile}</Text>
                     {/* </View> */}
                     
                 </View>
                 <View style={styles.viewRow}>
                     {/* <Image source={require('../assets/clinic/clock2.png')}  style={styles.imageStyle} /> */}
                     {/* <View style={{flexDirection:'row'}}> */}
-                        <Text style={styles.textHeading}>RM Hour</Text>
-                        <Text style={styles.textSubheading}>: {rm_hour} / {dayorhour[0]  == 1 ? "Hour" : "Day"}</Text>
+                        <Text style={styles.textHeading}>Rates</Text>
+                        <Text style={styles.textSubheading}>:  RM {rm_hour} / {dayorhour[0]  == 1 ? "Hour" : "Day"}</Text>
                     {/* </View> */}
                 </View>
                 
@@ -188,53 +206,29 @@ const JobDetails =(props) => {
                     {/* <Image source={require('../assets/clinic/manager-avatar.png')}  style={styles.imageStyle} /> */}
                     {/* <View style={{flexDirection:'row'}}> */}
                         <Text style={styles.textHeading}>Required {'\n'} Date</Text>
-                        <Text style={styles.textSubheading}>: {date}</Text>
+                        <Text style={styles.textSubheading}>:  {date}</Text>
                     {/* </View> */}
                 </View>
-                {(from[0] !== "" && to[0] !== "")
-                ?
-                <View style={[styles.viewRow,{justifyContent:'space-between',alignItems:"center"}]}>
-                        
-                    <View style={{flexDirection:'row',alignSelf:"flex-start"}}>
-                    {/* <Image source={require('../assets/clinic/manager-avatar.png')}  style={styles.imageStyle} /> */}
-                        <Text style={styles.textHeading}>From</Text>
-                        <Text style={styles.textSubheading}>: {from}</Text>
-                    </View>
-                
-                    <View style={{flexDirection:'row',alignSelf:"flex-end"}}>
-                        {/* <Image source={require('../assets/clinic/manager-avatar.png')}  style={styles.imageStyle} /> */}
-                        <Text style={styles.textHeading}>To</Text>
-                        <Text style={styles.textSubheading}>: {to}</Text>
-                    </View>
-                </View>
-                :
-                <View/>
-                }
-
                 <View style={styles.viewRow}>
                     
                     {/* <View style={{flexDirection:'row'}}> */}
                     {/* <Image source={require('../assets/clinic/map.png')}  style={styles.imageStyle} /> */}
                         <Text style={styles.textHeading}>State</Text>
-                        <Text style={styles.textSubheading} >: {state}</Text>
+                        <Text style={styles.textSubheading} >:  {state}</Text>
                     {/* </View> */}
                     
                 </View>
-                <View style={styles.viewRow}>
-                    
-                    {/* <View style={{flexDirection:'row'}}> */}
-                    {/* <Image source={require('../assets/clinic/map.png')}  style={styles.imageStyle} /> */}
-                        <Text style={styles.textHeading}>City</Text>
-                        
-                    {/* </View> */}
-                    {city[0] == ""
+                {city[0] !== ""
                     ?
-                    <Text style={styles.textSubheading} >: {state}</Text>
-                    :
-                    <Text style={styles.textSubheading} >: {city}</Text>
-                    }
-                   
+                <View style={styles.viewRow}>
+                  
+                    <Text style={styles.textHeading}>City</Text>
+                    <Text style={styles.textSubheading} >:  {city}</Text>
+                    
                 </View>
+                 :
+                 <View/>
+                 }
                 {(from[0] !== "" && to[0] !== "")
                 ?
                 <View style={[styles.viewRow,{justifyContent:'space-between',alignItems:"center",flex:1}]}>
@@ -242,13 +236,13 @@ const JobDetails =(props) => {
                     <View style={{flexDirection:'row',alignSelf:"flex-start",flex:0.5}}>
                     {/* <Image source={require('../assets/clinic/manager-avatar.png')}  style={styles.imageStyle} /> */}
                         <Text style={styles.textHeadingFrom}>From</Text>
-                        <Text style={styles.textSubheading}>: {from}</Text>
+                        <Text style={styles.textSubheading}>:  {from}</Text>
                     </View>
                 
                     <View style={{flexDirection:'row',alignSelf:"flex-end",flex:0.5}}>
                         {/* <Image source={require('../assets/clinic/manager-avatar.png')}  style={styles.imageStyle} /> */}
                         <Text style={styles.textHeadingFrom}>To </Text>
-                        <Text style={styles.textSubheading}>: {to}</Text>
+                        <Text style={styles.textSubheading}>:   {to}</Text>
                     </View>
                 </View>
                 :
@@ -259,24 +253,24 @@ const JobDetails =(props) => {
             <Card 
             title="Other Details"
             containerStyle={{width:'97%',height:null,elevation:5,borderColor:'#a7bbfa',borderRadius:4}} >
-                 <View style={{flexDirection:"row"}}>
-                    <Text style={styles.despHeading}>Job Location : </Text>
-                    <Text numberOfLines={20} style={styles.dsepText}>{joblocation}</Text>
+                 <View style={{flexDirection:"row",justifyContent:"center",}}>
+                    <Text style={styles.despHeading}>Job Location</Text>
+                    <Text numberOfLines={20} style={styles.dsepText}>:  {joblocation}</Text>
                 </View>
-                <View style={{width:"100%",borderWidth:0.25,marginTop:10,marginBottom:10,backgroundColor:"#ececec"}}></View>
+                <View style={{width:"100%",borderWidth:0.25,marginTop:10,marginBottom:5,backgroundColor:"#ececec"}}></View>
                 <View style={{flexDirection:"row"}}>
-                    <Text style={styles.despHeading}>Description : </Text>
-                    <Text numberOfLines={20} style={styles.dsepText}>{description}</Text>
+                    <Text style={styles.despHeading}>Description</Text>
+                    <Text numberOfLines={20} style={styles.dsepText}>:  {description}</Text>
                 </View>
                
                 {
-                    job_scope !== ""
+                    (job_scope[0] !== ""  && job_scope[0] !== null)
                     ?
                     <>
                      <View style={{width:"100%",borderWidth:0.25,marginTop:10,marginBottom:10,backgroundColor:"#ececec"}}></View>
                     <View style={{flexDirection:"row"}}>
-                        <Text style={styles.despHeading}>Job Scope : </Text>
-                        <Text numberOfLines={20} style={styles.dsepText}>{job_scope}</Text>
+                        <Text style={styles.despHeading}>Job Scope</Text>
+                        <Text numberOfLines={20} style={styles.dsepText}>:  {job_scope}</Text>
                     </View>
                     
                      </>
@@ -285,13 +279,13 @@ const JobDetails =(props) => {
                 }
 
                 {
-                    clinic_requirement !== ""
+                    (clinic_requirement[0] !== "" && clinic_requirement[0] !== null)
                     ?
                     <>
                      <View style={{width:"100%",borderWidth:0.25,marginTop:10,marginBottom:10,backgroundColor:"#ececec"}}></View>
                     <View style={{flexDirection:"row"}}>
-                        <Text style={styles.despHeading}>Clinic / {'\n'} Hospital {'\n'} Requirement : </Text>
-                        <Text numberOfLines={20} style={styles.dsepText}>{clinic_requirement}</Text>
+                        <Text style={styles.despHeading}>Clinic / {'\n'} Hospital {'\n'} Requirement</Text>
+                        <Text numberOfLines={20} style={styles.dsepText}>:  {clinic_requirement}</Text>
                     </View>
                    
                     </>
@@ -356,7 +350,7 @@ let styles = StyleSheet.create({
         width:"100%",
         height:null,
         backgroundColor:'#6B579F',
-        padding: 10,
+        padding:10,
 
 
     },
@@ -369,9 +363,9 @@ let styles = StyleSheet.create({
     },
     textHeading:{
         color:'white',
-        fontSize:15,
+        fontSize:14,
         fontFamily:"roboto-bold",
-        paddingLeft:10,
+        paddingLeft:5,
         flex:0.25,
     },
     locationText:{
@@ -386,7 +380,7 @@ let styles = StyleSheet.create({
         color:'white',
         fontSize:15,
         fontFamily:'roboto-light',
-        paddingLeft:10,
+        paddingLeft:5,
         flex:0.73,
     },
     dsepText:{
@@ -394,13 +388,15 @@ let styles = StyleSheet.create({
         color:"black",
         fontFamily:'roboto-light',
         marginBottom:20,
-        flex:4
+        flex:4,
+     
     },
     despHeading:{
         fontSize:13,
         color:"grey",
         fontFamily:'roboto-bold',
-        flex:2
+        flex:2,
+       
     },
 	submitButton:{
         width:'40%',

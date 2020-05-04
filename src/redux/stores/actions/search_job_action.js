@@ -328,6 +328,7 @@ export const suggested_jobs_list = (user_id) => {
         let formdata = new FormData();
         formdata.append("user_id",user_id);
 
+        console.log("formdata...",formdata);
         Axios.post(ApiUrl.base_url + ApiUrl.get_suggested_job,formdata)
             .then(response => {
 
@@ -335,7 +336,10 @@ export const suggested_jobs_list = (user_id) => {
                     type: ActionTypes.HIDE_SPINNER
                 });
 
+                console.log("suggested jonbss....",response.data.data);
                 if(response.data.status == 'success'){
+
+                    console.log("suggested jonbss....",response.data.data);
 
                     dispatch({
                         type: ActionTypes.SUGGESTED_JOBS,
@@ -344,12 +348,17 @@ export const suggested_jobs_list = (user_id) => {
     
 
                 }else{
+                    dispatch({
+                        type: ActionTypes.SUGGESTED_JOBS,
+                        suggested_jobs:[]
+                    });
                     showMessage(0,response.data.message,'Suggested Job', true,false);
                 }
 
             })
             .catch(error => {
 
+                console.log("error",error);
                 dispatch({
                     type:ActionTypes.RESPONSE_ERROR,
                })

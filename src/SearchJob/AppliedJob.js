@@ -82,12 +82,24 @@ const AppliedJob = (props) => {
 
                     //   <View style={{width:'100%'}}>
                     <TouchableOpacity onPress={() => {
+                        let city = "";
+                        if(item.job_detail.city !== null){
+                            city = item.job_detail.city.name
+                        }
+                        let clinic_requirement = "";
+                        if(item.job_detail.clinic_requirement !== null){
+                            clinic_requirement = item.job_detail.clinic_requirement;
+                        }
+                        let job_scope = "";
+                        if(item.job_detail.job_scope !== null){
+                            job_scope = item.job_detail.job_scope
+                        }
                         props.navigation.navigate('AppliedJobsDetails',{"id" :item.job_id ,
                         "profile" : item.job_detail.profile.name , "experience" :item.job_detail.exp_required , "location": item.job_detail.job_location,
                         "date" : item.job_detail.required_date , "description" : item.job_detail.job_desc , "cid" : item.job_detail.cid ,
                          "from" : item.job_detail.from_time , "to" : item.job_detail.to_time,"application_status":item.application_status,"appid":item.id,
-                         "clinic_details" : item.clinic_name, "state" : item.job_detail.state_name , "city": item.job_detail.city_name,"job_scope":item.job_detail.job_scope,
-                         "clinic_requirement" :item.job_detail.clinic_requirement,"rm_hour": item.job_detail.rm_hour, "dayorhour": item.job_detail.dayorhour,
+                         "clinic_details" : item.clinic_name, "state" : item.job_detail.state.name , "city": city,"job_scope":job_scope,
+                         "clinic_requirement" :clinic_requirement,"rm_hour": item.job_detail.rm_hour, "dayorhour": item.job_detail.dayorhour,
                          load :loadAgain
                     })
 

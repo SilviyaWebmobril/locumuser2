@@ -5,12 +5,14 @@ import MyHOC from '../HOC/MyHOC';
 import firebase from 'react-native-firebase';
 import { useDispatch, useSelector } from "react-redux";
 import {userDevicetoken,fetchJobCategories} from '../redux/stores/actions/register_user';
+import {showMessage} from '../Globals/Globals';
 
 
 const HomeScreen =(props)  => {
 
     const token = useSelector(state => state.auth.device_token);
     const post_available =  useSelector(state => state.register.user.jobs_remaining)
+    const verify = useSelector(state => state.register.user.verify);
     const wallet_balance =  useSelector(state => state.register.user.wallet_balance)
     const dispatch =  useDispatch();
 
@@ -204,10 +206,14 @@ const HomeScreen =(props)  => {
                
                 <Card containerStyle={styles.cardContainerStyle}>  
                     <TouchableOpacity onPress={()=>{
-                      
-                      if(post_available == 0 && wallet_balance == 0){
+                    
+                      if(wallet_balance == 0 && post_available == 0){
 
-                        showMessage(0,"Please add money and buy packages to post a new job.", 'Profile', true, false);
+                        showMessage(0,"Please add money and buy packages to post a new job.", 'Home', true, false);
+
+                    }else if(post_available == 0){
+
+                        showMessage(0,"Please buy packages to post a new job.", 'Home', true, false);
 
                     }else{
                         props.navigation.navigate("SearchJob")
