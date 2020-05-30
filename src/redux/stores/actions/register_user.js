@@ -61,6 +61,8 @@ export const getStatesList = () => (dispatch) =>
             })
             .catch(error => {
 
+                console.log("show error",error);
+
                 showMessage(0,'Something went wrong. Please try again later !', 'Create Profile', true, false);
 
                 dispatch( {
@@ -206,6 +208,8 @@ export const fetchJobCategories =  () => (dispatch) =>
         axios.post(ApiUrl.base_url+ApiUrl.get_job_categories)
             .then(response => {
 
+                console.log("response......",response.data);
+
                 if(response.data.status === 'success'){
 
                     let profession_categories =[] ;
@@ -232,6 +236,8 @@ export const fetchJobCategories =  () => (dispatch) =>
 
             })
             .catch(error => {
+
+                console.log("show error",error);
 
                 dispatch({
                     type:RESPONSE_ERROR,

@@ -1,11 +1,13 @@
 import React ,{ useState, useEffect } from 'react';
-import {View , Text ,StyleSheet,Image,TouchableOpacity} from 'react-native';
+import {View , Text ,StyleSheet,Image,TouchableOpacity,Alert} from 'react-native';
 import { Card } from 'react-native-elements';
 import MyHOC from '../HOC/MyHOC';
-import firebase from 'react-native-firebase';
+//import firebase from 'react-native-firebase';
+import messaging from '@react-native-firebase/messaging';
 import { useDispatch, useSelector } from "react-redux";
-import {userDevicetoken,fetchJobCategories} from '../redux/stores/actions/register_user';
+import {userDevicetoken,fetchJobCategories} from '../redux/stores/actions/auth_action';
 import {showMessage} from '../Globals/Globals';
+import {updateRemainingJobs} from '../redux/stores/actions/packages_coupon_action'
 
 
 const HomeScreen =(props)  => {
@@ -16,8 +18,17 @@ const HomeScreen =(props)  => {
     const wallet_balance =  useSelector(state => state.register.user.wallet_balance)
     const dispatch =  useDispatch();
 
+
+      requestUserPermission = async() => {
+        const settings = await messaging().requestPermission();
+      
+        if (settings) {
+
+          console.log('Permission settings:', settings);
+        }
+      }
    
-    const  onTokenRefreshListener =()=>  firebase.messaging().onTokenRefresh(fcmToken => {
+    const  onTokenRefreshListener =()=>  messaging().onTokenRefresh(fcmToken => {
         // Process your token as required
         if(fcmToken){
           console.log("get fcmtoken123",fcmToken);
@@ -25,10 +36,11 @@ const HomeScreen =(props)  => {
         }
     });
 
-    const getFcmToken =  () => firebase.messaging().getToken()
+    const getFcmToken =  () => messaging().getToken()
     .then(fcmToken => {
         if (fcmToken) {
-            dispatch(userDevicetoken(fcmToken));
+           
+           dispatch(userDevicetoken(fcmToken));
             
         } else {
             console.log("get fcmtoken111");
@@ -38,157 +50,106 @@ const HomeScreen =(props)  => {
     });
 
 
-    const  createNotificationListeners = async() => {
-        /*
-        * Triggered when a particular notification has been received in foreground
-        * */
-        notificationListener = firebase.notifications().onNotification((notification) => {
-
-            console.log("notifaication log1",notification);
-            
-            getNotificationData(notification);
-        });
-      
-      
-        messageListener = firebase.messaging().onMessage((message) => {
-          //process data message
-
-          console.log("get message",JSON.stringify(message));
-         
-          getNotificationData(message);
-        });
-
-        const notificationOpen = await firebase.notifications().getInitialNotification();
-        // called when notification is cliked
-        console.log("i am here....",notificationOpen)
-        if (notificationOpen) {
-         const { _title, _body , _data } = notificationOpen.notification;
-         let item = JSON.parse(_data.result);
-         console.log("data res",item);
-         if(item !== null && item !== undefined){
-
-            let app_status  = 0 ;
-            if("application_status" in item.job_detail){
-                app_status = item.job_detail.application_status
-            }
-            let clinic = {};
-            if(item.clinic !== null) {
-                Object.assign(clinic,item.clinic)
-            }
-
-            props.navigation.navigate('JobDetails',{"id" :item.job_detail.id ,
-            "profile" : item.job_detail.profile.name , "experience" :item.job_detail.exp_required , "location": item.job_detail.job_location,
-            "date" : item.job_detail.required_date , "description" : item.job_detail.job_desc , "cid" : item.job_detail.cid ,
-             "from" : "" , "to" : "",'application_status':app_status,
-             //"clinic_details" : item.clinic
    
-               })
 
-         }
-        
-        }
-        notificationListener = firebase.notifications().onNotificationOpened((notificationOpen) =>{
+    const createNotificationListeners = () => {
 
-            console.log("i am here....",notificationOpen)
-            if (notificationOpen) {
-                const { _title, _body , _data } = notificationOpen.notification;
-                let item = JSON.parse(_data.result);
-                console.log("data res",item);
-                if(item !== null && item !== undefined){
-       
-                   let app_status  = 0 ;
-                   if("application_status" in item.job_detail){
-                       app_status = item.job_detail.application_status
-                   }
-       
-                   props.navigation.navigate('JobDetails',{"id" :item.job_detail.id ,
-                   "profile" : item.job_detail.profile.name , "experience" :item.job_detail.exp_required , "location": item.job_detail.job_location,
-                   "date" : item.job_detail.required_date , "description" : item.job_detail.job_desc , "cid" : item.job_detail.cid ,
-                    "from" : "" , "to" : "",'application_status':app_status,
+
+         messaging().onMessage(async remoteMessage => {
+
+            console.log("message rece",remoteMessage);
+           // alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+         
+          });
+
+          messaging().setBackgroundMessageHandler(async remoteMessage => {
+            console.log('Message handled in the background!', remoteMessage);
+
           
-                      })
-       
+          
+    
+          });
+
+          const notificationOpened =  messaging().onNotificationOpenedApp(remoteMessage => {
+            console.log(
+              'Notification caused app to open from background state:',
+              remoteMessage,
+            );
+
+            const myRemote = remoteMessage.data.result;
+
+            let item = JSON.parse(myRemote);
+            if(item !== null && item !== undefined){
+
+                let app_status  = 0 ;
+                if("application_status" in item.job_detail){
+                    app_status = item.job_detail.application_status
                 }
 
-            }
-
-        })
-        firebase.notifications().removeAllDeliveredNotifications()
-
-      }
-
+                // clinic details in users object
+                let clinic = {};
+                if(item.job_detail.users !== null) {
+                    Object.assign(clinic,item.job_detail.users);
+                    if("jobs_remaining" in item.job_detail.users){
+                        dispatch(updateRemainingJobs( item.job_detail.users.jobs_remaining,item.job_detail.users.wallet_balance))
+                    }
+                }
+               
+                let clinic_requirement =  "";
+                if(item.job_detail.clinic_requirement !== null){
+                    clinic_requirement = item.job_detail.clinic_requirement;
+                }
+                let job_scope = "";
+                if(item.job_detail.job_scope !== null){
+                    job_scope = item.job_detail.job_scope;
+                }
+                let city = "";
+                if(item.job_detail.city !== null){
+                    // Object.assign(city,item.job_detail.city)
+                    city = item.job_detail.city.name;
+                }
     
-
-      const getNotificationData = (notification) => {
-
-        const { _title, _body } = notification;
-        const channelId = new firebase.notifications.Android.Channel(
-            'Default',
-            'Default',
-            firebase.notifications.Android.Importance.High
-        );
-        firebase.notifications().android.createChannel(channelId);
-
-        let notification_to_be_displayed = new firebase.notifications.Notification({
-            data: notification._data,
-            sound: 'default',
-            show_in_foreground: true,
-            title:  _title  ,
-            body:  _body,
-        });
-
-        if (Platform.OS == 'android') {
-            notification_to_be_displayed.android
-                .setPriority(firebase.notifications.Android.Priority.High)
-                .android.setChannelId('Default')
-                .android.setVibrate(1000)
-                .android.setSmallIcon('ic_launcher');
-        }
-      
-       firebase.notifications().displayNotification(notification_to_be_displayed);
-
+                props.navigation.navigate('JobDetails',{"id" :item.job_detail.id ,
+                "profile" : item.job_detail.profile.name , "experience" :item.job_detail.exp_required , "location": item.job_detail.job_location,
+                "date" : item.job_detail.required_date , "description" : item.job_detail.job_desc , "cid" : item.job_detail.cid ,
+                 "from" : "" , "to" : "",'application_status':app_status,
+                 "clinic_details" : clinic, "state" : item.job_detail.state.name , "city": city,"job_scope":job_scope,
+                 "clinic_requirement" :clinic_requirement,"rm_hour": item.job_detail.rm_hour, "dayorhour": item.job_detail.dayorhour
+                 //"clinic_details" : item.clinic
        
+                })
+    
+             }
+           
+          });
 
 
-
-    //    let item = JSON.parse(notification._data.result);
-    //      console.log("data res",item);
-    //      if(item !== null && item !== undefined){
-
-    //         let app_status  = 0 ;
-    //         if("application_status" in item.job_detail){
-    //             app_status = item.job_detail.application_status
-    //         }
-
-    //         props.navigation.navigate('JobDetails',{"id" :item.job_detail.id ,
-    //         "profile" : item.job_detail.profile.name , "experience" :item.job_detail.exp_required , "location": item.job_detail.job_location,
-    //         "date" : item.job_detail.required_date , "description" : item.job_detail.job_desc , "cid" : item.job_detail.cid ,
-    //          "from" : "" , "to" : "",'application_status':app_status,
-   
-    //            })
-
-    //     }
         
+          
+    }
 
    
-      }
+
+  
 
 
     useEffect(() => {
 
-       
+         requestUserPermission();
         onTokenRefreshListener();
+         createNotificationListeners()
         
         if(token === null){
           
             getFcmToken();
            
         }
-        createNotificationListeners();
+      //  createNotificationListeners();
     
        
         return () => {
-            createNotificationListeners();
+           createNotificationListeners();
+           requestUserPermission();
             onTokenRefreshListener();
         };
 
@@ -200,16 +161,16 @@ const HomeScreen =(props)  => {
         // <View style={styles.container}>
           
         <View style={styles.container}>
-           <Image source={require('../assets/clinic/banner.jpg')}  style={styles.bannerImage} /> 
+           {/* <Image source={require('../assets/clinic/banner.jpg')}  style={styles.bannerImage} />  */}
            
-           <View style={styles.viewRow}>
+           <View style={[styles.viewRow,{flex:0}]}>
                
                 <Card containerStyle={styles.cardContainerStyle}>  
                     <TouchableOpacity onPress={()=>{
                     
                       if(wallet_balance == 0 && post_available == 0){
 
-                        showMessage(0,"Please add money and buy packages to post a new job.", 'Home', true, false);
+                        showMessage(0,"You needs to load your account with credit before you can search.", 'Home', true, false);
 
                     }else if(post_available == 0){
 
@@ -226,18 +187,7 @@ const HomeScreen =(props)  => {
                     </TouchableOpacity>
                 </Card>
 
-                <Card 
-                containerStyle={styles.cardContainerStyle}>
-                        <TouchableOpacity onPress={()=>{
-                    props.navigation.navigate("ContactAdmin")
-                    }}>
-                    <Image source={require('../assets/clinic/4.png')} style={styles.imageStyle} />
-                    <Text style={styles.textStyle} >Feedback</Text>
-                    </TouchableOpacity>
-                </Card>
-                
-              
-               {/* <Card 
+               <Card 
                 containerStyle={styles.cardContainerStyle}>
                      <TouchableOpacity onPress={()=>{
                    props.navigation.navigate("Packages")
@@ -245,11 +195,34 @@ const HomeScreen =(props)  => {
                     <Image source={require('../assets/doctor/package.png')} style={styles.imageStyle1} />
                    <Text style={styles.textStyle} >Buy Packages</Text>
                    </TouchableOpacity>
-               </Card> */}
+               </Card>
 
            </View>
 
-           {/* <View style={styles.viewRow}>
+           <View style={[styles.viewRow,{}]}>
+               
+               <Card containerStyle={styles.cardContainerStyle}>  
+                   <TouchableOpacity onPress={()=>{
+                  props.navigation.navigate("EditProfile")
+                  }}>
+                   <Image source={require('../assets/doctor/wallet.png')}  style={styles.imageStyle1}  />
+                   <Text style={styles.textStyle}>Profile</Text>
+                   </TouchableOpacity>
+               </Card>
+             
+             
+              <Card 
+               containerStyle={styles.cardContainerStyle}>
+                    <TouchableOpacity onPress={()=>{
+                  props.navigation.navigate("AppliedJobs")
+                  }}>
+                   <Image source={require('../assets/clinic/4.png')} style={styles.imageStyle} />
+                  <Text style={styles.textStyle} >Applied Jobs</Text>
+                  </TouchableOpacity>
+              </Card>
+
+          </View>
+           <View style={[styles.viewRow,{}]}>
                
                <Card containerStyle={styles.cardContainerStyle}>  
                    <TouchableOpacity onPress={()=>{
@@ -267,11 +240,13 @@ const HomeScreen =(props)  => {
                   props.navigation.navigate("ContactAdmin")
                   }}>
                    <Image source={require('../assets/clinic/4.png')} style={styles.imageStyle} />
-                  <Text style={styles.textStyle} >Feedback</Text>
+                  <Text style={styles.textStyle} >Contact</Text>
                   </TouchableOpacity>
               </Card>
 
-          </View> */}
+          </View>
+        
+        
         
         </View>
     )
@@ -284,20 +259,22 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         flexDirection:'column',
-        flex:1
+        marginTop:40,
+      
     },
 
-    bannerImage : {
-        width: '100%', 
-        height:null,
-        flex:1.5
+    // bannerImage : {
+    //     width: '100%', 
+    //     height:null,
+    //     flex:1.5
      
-    },
+    // },
     viewRow:{
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',
-        flex:1.2
+      
+      
 
     },
     cardContainerStyle:{

@@ -253,12 +253,12 @@ const JobDetails =(props) => {
             <Card 
             title="Other Details"
             containerStyle={{width:'97%',height:null,elevation:5,borderColor:'#a7bbfa',borderRadius:4}} >
-                 <View style={{flexDirection:"row",justifyContent:"center",}}>
+                 <View style={{flexDirection:"row",alignItems:"center"}}>
                     <Text style={styles.despHeading}>Job Location</Text>
                     <Text numberOfLines={20} style={styles.dsepText}>:  {joblocation}</Text>
                 </View>
                 <View style={{width:"100%",borderWidth:0.25,marginTop:10,marginBottom:5,backgroundColor:"#ececec"}}></View>
-                <View style={{flexDirection:"row"}}>
+                <View style={{flexDirection:"row",alignItems:"center"}}>
                     <Text style={styles.despHeading}>Description</Text>
                     <Text numberOfLines={20} style={styles.dsepText}>:  {description}</Text>
                 </View>
@@ -268,7 +268,7 @@ const JobDetails =(props) => {
                     ?
                     <>
                      <View style={{width:"100%",borderWidth:0.25,marginTop:10,marginBottom:10,backgroundColor:"#ececec"}}></View>
-                    <View style={{flexDirection:"row"}}>
+                    <View style={{flexDirection:"row",alignItems:"center"}}>
                         <Text style={styles.despHeading}>Job Scope</Text>
                         <Text numberOfLines={20} style={styles.dsepText}>:  {job_scope}</Text>
                     </View>

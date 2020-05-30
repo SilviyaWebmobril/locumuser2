@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import MyActivityIndicator from '../CustomUI/MyActivityIndicator';
 import {submitUserLogin} from '../redux/stores/actions/register_user';
-import firebase from 'react-native-firebase';
 import {userDevicetoken } from '../redux/stores/actions/auth_action';
+import messaging from '@react-native-firebase/messaging';
 
 const Login = (props) => {
 
@@ -20,7 +20,7 @@ const Login = (props) => {
     const token = useSelector(state => state.register.device_token);
 
 
-      const  onTokenRefreshListener =()=>  firebase.messaging().onTokenRefresh(fcmToken => {
+      const  onTokenRefreshListener =()=>  messaging().onTokenRefresh(fcmToken => {
           // Process your token as required
           if(fcmToken){
             console.log("get fcmtoken123",fcmToken);
@@ -28,7 +28,7 @@ const Login = (props) => {
           }
       });
 
-        const getFcmToken =  () => firebase.messaging().getToken()
+        const getFcmToken =  () => messaging().getToken()
           .then(fcmToken => {
               if (fcmToken) {
                 dispatch(userDevicetoken(fcmToken));

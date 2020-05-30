@@ -100,6 +100,8 @@ const SearchJob = (props) => {
 
     const setToggleValues = () => {
 
+        setCityLabel("");
+        setStateLabel("");
         setStateId("");
         setCityId("");
        
@@ -167,6 +169,7 @@ const SearchJob = (props) => {
 
     
     const searchJob = () => {
+
 
         if(isValid()){
             NetInfo.isConnected.fetch().then(isConnected => {
@@ -332,10 +335,27 @@ const SearchJob = (props) => {
                 }}
             /> */}
 
+                <View style={{flexDirection:"row",justifyContent:"space-between",marginTop:15}}>
+                    <Text style={styles.textStyle}>30km to 40km from my location</Text>
+                    <Switch 
+                     trackColor={{true: '#4C74E6', false: 'grey'}}
+                     thumbColor='#4C74E6'
+                     onValueChange = {setToggleValues}
+                     value = {toggleSwitch}
+                    />
+                </View>
+                <View style={{flexDirection:"row",justifyContent:"center",width:"100%",marginTop:20}}>
+                    <View style={{flex:0.4,width:"100%",height:1,borderWidth:0.5,borderColor:"#ececec",justifyContent:"center",alignSelf:"center"}}></View>
+                    <Text style={{flex:0.3,alignSelf:"center",marginLeft:5,marginRight:5}}>Or Search By</Text>
+                    <View style={{flex:0.4,height:1,borderWidth:0.5,borderColor:"#ececec",justifyContent:"center",alignSelf:"center"}}></View>
+                </View>
+
             <Dropdown
                     labelPadding={0}
                     labelHeight={15}
                     fontSize={14}
+                    disabled={toggleSwitch}
+                    disabledItemColor="red"
                     label='Select States'
                     data={get_states_list}
                     value={state_label}
@@ -346,6 +366,8 @@ const SearchJob = (props) => {
                     labelPadding={0}
                     labelHeight={15}
                     fontSize={14}
+                    disabled={toggleSwitch}
+                    disabledItemColor="red"
                     label='Select City'
                     data={get_cities_list}
                     value={city_label}
@@ -368,15 +390,7 @@ const SearchJob = (props) => {
                 onChangeText={(fulladdress) => setFullAddress(fulladdress)}
             /> */}
 
-<               View style={{flexDirection:"row",justifyContent:"space-between",marginTop:15}}>
-                    <Text style={styles.textStyle}>10km to 20km from my location</Text>
-                    <Switch 
-                     trackColor={{true: '#4C74E6', false: 'grey'}}
-                     thumbColor='#4C74E6'
-                     onValueChange = {setToggleValues}
-                     value = {toggleSwitch}
-                    />
-                </View>
+             
 
             {/* {toggleSwitch
             ?

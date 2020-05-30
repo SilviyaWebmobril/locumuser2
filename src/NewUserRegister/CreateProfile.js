@@ -58,6 +58,18 @@ const CreateProfile = (props,navigation) => {
     const [city_id , setCityId] = useState("");
     const [user_address,setUserAddress] = useState("");
      const dispatch = useDispatch();
+
+    //  let  region1 = {
+    //     latitude: 3.148561,
+    //     longitude: 101.652778,
+    //     latitudeDelta: 0.2,
+    //     longitudeDelta: 0.9
+    //   };
+
+      const LATITUDE_DELTA = 0.1;
+      const LONGITUDE_DELTA = 0.1;
+
+    //  const [region ,setRegion] = useState(region1);
     
 
     useEffect(()=> {
@@ -312,6 +324,32 @@ const CreateProfile = (props,navigation) => {
 		return valid;
 	}
 
+    const getCurrentPosition = async() => {
+        try {
+            await Geolocation.getCurrentPosition(
+            (position) => {
+              const region = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
+              };
+            //  setRegion(region);
+
+            return position;
+            },
+             (error) => {
+              //TODO: better design
+              showMessage(1,'To get the jobs from your current location , please allow access to location services from Settings.', 'Location', true, false);
+              console.log("error on map",error);
+             
+            },
+            {enableHighAccuracy: false, timeout: 20000, maximumAge: 0}
+          );
+        } catch(e) {
+          alert(e.message || "");
+        }
+      };  
 
     const submitCreateProfile = () => {
 
@@ -324,14 +362,15 @@ const CreateProfile = (props,navigation) => {
                 }else{
                     if(isValid()){
                         dispatch(showSpinner())
-
+                        let userposition =   getCurrentPosition();
                         Geocoder.init("AIzaSyDBxQEvhACIZ73YCvPF9fI7A2l6lULic0E");
                         Geocoder.from(street_1)
                         .then(json => {
+                          
                             dispatch(hideSpinner())
-                            var location = json.results[0].geometry.location;
-                            console.log(json);
-                            console.log("location",location);
+                           // var location = json.results[0].geometry.location;
+                           // console.log(json);
+                           // console.log("location",location);
 
                             dispatch(submitCreateProfile1(temp_register_id,first_name,last_name,profession_id,mobile,degree,speciality_id,grades_id,experience
                                 ,user_address,current_work,description,location.lat ,location.lng,state_id, city_id,street_1,street_2,post_code,ic_no,mmc_no,apc_no, props.navigation));

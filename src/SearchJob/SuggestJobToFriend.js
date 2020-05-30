@@ -65,7 +65,8 @@ const SuggestjobToFriend = (props) => {
                                            // showMessage(0,response.data.message,'Suggest Jobs', true,false); 
                         
                                         }else{
-                                            showMessage(0,response.data.message,'Suggest Job', true,false); 
+                                            showMessage(0, `We have successfully sent an email to ${email}`, 'Suggest Job', true, false);
+                                           // showMessage(0,response.data.message,'Suggest Job', true,false); 
                                         }
                         
                                     })
