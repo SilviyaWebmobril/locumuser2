@@ -1,5 +1,5 @@
 import React , { useState , useEffect} from 'react';
-import {View ,Text, Image,TouchableOpacity,StyleSheet, Dimensions ,Platform} from 'react-native';
+import {View ,Text, Image,TouchableOpacity,StyleSheet, Dimensions ,Platform,SafeAreaView} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ImagePicker from "react-native-image-picker";
 import {uploadProfilePic } from '../redux/stores/actions/register_user';
@@ -104,6 +104,13 @@ const HeaderComponent = (props) => {
 	}
    
     return (
+          <>
+            <LinearGradient   
+              colors= {["#4E73E6","#9456CE"]}
+              start= {{x: 0.0, y: 0.5}}
+              end= {{ x: 0.6, y: 0.4 }} >
+              <SafeAreaView  />
+          </LinearGradient>
        
             <LinearGradient   
                 style={{ height:150, }}
@@ -112,7 +119,7 @@ const HeaderComponent = (props) => {
                 end= {{ x: 0.6, y: 0.4 }} >
 
                 <React.Fragment>
-                    <TouchableOpacity onPress={() => {(props.value === 1 || props.value == 2) ? props.navigation.goBack() : props.navigation.pop()}}>
+                    <TouchableOpacity onPress={() => {(props.value === 1 || props.value == 2) ? props.navigation.goBack() : props.navigation.popToTop()}}>
                         <Image style={{ width: 20, height: 20, margin: 20 }} source={require('../assets/clinic/left-arrow.png')} />
 
                     </TouchableOpacity>
@@ -168,6 +175,7 @@ const HeaderComponent = (props) => {
                   
               </React.Fragment>
             </LinearGradient>
+            </>
        
     )
 

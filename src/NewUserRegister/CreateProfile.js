@@ -13,7 +13,7 @@ import MyActivityIndicator from '../CustomUI/MyActivityIndicator';
 import { useDispatch, useSelector } from "react-redux";
 import {fetchJobCategories,fetchSpecialities,submitCreateProfile1,getStatesList,getCitiesList, showSpinner, hideSpinner} from '../redux/stores/actions/register_user';
 //import Geocoder from 'react-native-geocoder';
-
+import Geolocation from '@react-native-community/geolocation';
 import Geocoder from 'react-native-geocoding';
 
 const CreateProfile = (props,navigation) => {
@@ -336,6 +336,7 @@ const CreateProfile = (props,navigation) => {
               };
             //  setRegion(region);
 
+            console.log("pos",position);
             return position;
             },
              (error) => {
@@ -354,7 +355,7 @@ const CreateProfile = (props,navigation) => {
     const submitCreateProfile = () => {
 
 
-            NetInfo.isConnected.fetch().then(isConnected => {
+            NetInfo.isConnected.fetch().then(async (isConnected) => {
 
                 if(!isConnected){
                     props.navigation.navigate("NoNetwork");
@@ -362,32 +363,66 @@ const CreateProfile = (props,navigation) => {
                 }else{
                     if(isValid()){
                         dispatch(showSpinner())
-                        let userposition =   getCurrentPosition();
-                        Geocoder.init("AIzaSyDBxQEvhACIZ73YCvPF9fI7A2l6lULic0E");
-                        Geocoder.from(street_1)
-                        .then(json => {
-                          
-                            dispatch(hideSpinner())
-                           // var location = json.results[0].geometry.location;
-                           // console.log(json);
-                           // console.log("location",location);
-
-                            dispatch(submitCreateProfile1(temp_register_id,first_name,last_name,profession_id,mobile,degree,speciality_id,grades_id,experience
-                                ,user_address,current_work,description,location.lat ,location.lng,state_id, city_id,street_1,street_2,post_code,ic_no,mmc_no,apc_no, props.navigation));
-                        })
-                        .catch(error => 
-                            {
+                        try {
+                            await Geolocation.getCurrentPosition(
+                            (position) => {
+                              const region = {
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude,
+                                latitudeDelta: LATITUDE_DELTA,
+                                longitudeDelta: LONGITUDE_DELTA,
+                              };
+                            //  setRegion(region);
+                
                                 dispatch(hideSpinner())
-                                console.log("er",error);
-                                if(error.origin.results.length  <= 0 )
-                                {
-                                    showMessage(0, 'Please Enter valid Street 1', 'Profile', true, false);
+                                dispatch(submitCreateProfile1(temp_register_id,first_name,last_name,profession_id,mobile,degree,speciality_id,grades_id,experience
+                                ,user_address,current_work,description,position.coords.latitude ,position.coords.longitude,state_id, city_id,street_1,street_2,post_code,ic_no,mmc_no,apc_no, props.navigation));
+                            },
+                             (error) => {
+                              //TODO: better design
+                              if(error.code ==  1 ){
 
-                                }
+                                showMessage(1,'To get the jobs from your current location , please allow access to location services from Settings.', 'Location', true, false);
+                              }
+                              console.log("error on map",error);
+                              dispatch(hideSpinner())
+                              dispatch(submitCreateProfile1(temp_register_id,first_name,last_name,profession_id,mobile,degree,speciality_id,grades_id,experience
+                              ,user_address,current_work,description,'0.00' ,'0.00',state_id, city_id,street_1,street_2,post_code,ic_no,mmc_no,apc_no, props.navigation));
+                             
+                            },
+                            {enableHighAccuracy: false, timeout: 20000, maximumAge: 0}
+                          );
+                        } catch(e) {
+                          alert(e.message || "");
+                        }
 
-                            }
+                       // console.log("user loaction",userposition);
+                        
+                        // Geocoder.init("AIzaSyDBxQEvhACIZ73YCvPF9fI7A2l6lULic0E");
+                        // Geocoder.from(street_1)
+                        // .then(json => {
+                          
+                        //     dispatch(hideSpinner())
+                        //    // var location = json.results[0].geometry.location;
+                        //    // console.log(json);
+                        //    // console.log("location",location);
+
+                        //     dispatch(submitCreateProfile1(temp_register_id,first_name,last_name,profession_id,mobile,degree,speciality_id,grades_id,experience
+                        //         ,user_address,current_work,description,location.lat ,location.lng,state_id, city_id,street_1,street_2,post_code,ic_no,mmc_no,apc_no, props.navigation));
+                        // })
+                        // .catch(error => 
+                        //     {
+                        //         dispatch(hideSpinner())
+                        //         console.log("er",error);
+                        //         if(error.origin.results.length  <= 0 )
+                        //         {
+                        //             showMessage(0, 'Please Enter valid Street 1', 'Profile', true, false);
+
+                        //         }
+
+                        //     }
                            
-                            );
+                        //     );
 
                        
                     }

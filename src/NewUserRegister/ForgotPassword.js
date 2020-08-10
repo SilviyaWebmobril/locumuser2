@@ -6,12 +6,13 @@ import { showMessage } from '../Globals/Globals';
 import { TextField } from 'react-native-material-textfield';
 import { useDispatch, useSelector } from "react-redux";
 import {forgotPassword } from '../redux/stores/actions/register_user';
- 
+import MyActivityIndicator from '../CustomUI/MyActivityIndicator'; 
 
 const ForgotPassword = (props) =>{
 
 
     const [email ,setEmail] = useState("");
+    const loading_status = useSelector(state => state.register.loading_status);
     const dispatch = useDispatch();
 
 
@@ -49,6 +50,8 @@ const ForgotPassword = (props) =>{
 				}
 				else {
 
+                    console.log("on forgot password");
+
                     dispatch(forgotPassword(email))
 
                 }
@@ -58,14 +61,23 @@ const ForgotPassword = (props) =>{
        
     }
 
+
+    if (loading_status) {
+        return (
+           <MyActivityIndicator />
+        );
+    }
+
     return(
         <KeyboardAwareScrollView>
           
        
-            <View style={{ width: Dimensions.get('window').width * 0.9,alignSelf:'center'}}>
+            <View style={{ width: Dimensions.get('window').width * 0.9,alignSelf:'center',marginTop:20}}>
 
                 <TextField
-                style={{ width: '100%',alignSelf: "center",marginTop:10 }}
+                labelHeight={15}
+                labelPadding={0}
+                //style={{ width: '100%',alignSelf: "center",marginTop:10 }}
                 label='Email'
                 value={email}
                 onChangeText={(email) => setEmail(email.trim())}

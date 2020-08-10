@@ -20,13 +20,13 @@ const Login = (props) => {
     const token = useSelector(state => state.register.device_token);
 
 
-      const  onTokenRefreshListener =()=>  messaging().onTokenRefresh(fcmToken => {
-          // Process your token as required
-          if(fcmToken){
-            console.log("get fcmtoken123",fcmToken);
-              dispatch(userDevicetoken(fcmToken));
-          }
-      });
+      // const  onTokenRefreshListener =()=>  messaging().onTokenRefresh(fcmToken => {
+      //     // Process your token as required
+      //     if(fcmToken){
+      //       console.log("get fcmtoken123",fcmToken);
+      //         dispatch(userDevicetoken(fcmToken));
+      //     }
+      // });
 
         const getFcmToken =  () => messaging().getToken()
           .then(fcmToken => {
@@ -36,29 +36,29 @@ const Login = (props) => {
               } else {
                 console.log("get fcmtoken111");
                
-                  onTokenRefreshListener();
+                //  onTokenRefreshListener();
               } 
           })
      
   useEffect(() => {
   
   
-      onTokenRefreshListener();
-       getFcmToken();
+     // onTokenRefreshListener();
+      getFcmToken();
       
      
       return () => {
-          onTokenRefreshListener();
+       //   onTokenRefreshListener();
       };
 
   },[])
   
 
-    signup =() => {
+    const signup =() => {
         // this.next()
         props.navigation.navigate('Register');
       }
-    forgot = () => {
+    const forgot = () => {
     props.navigation.navigate("ForgotPassword")
     }
 
@@ -70,11 +70,11 @@ const Login = (props) => {
 
     let valid = false;
 
-    if (email.length > 0 && password.length > 0) {
+    if (email && password) {
       valid = true;
     }
 
-    if (email.length === 0) {
+    if (!email) {
       showMessage(1, 'You must enter an email', 'Login', true, false);
 
     }
@@ -84,7 +84,7 @@ const Login = (props) => {
 
       return false;
     }
-    else if (password.length === 0) {
+    else if (!password) {
 
       showMessage(1, 'You must enter a password', 'Login', true, false);
 
@@ -161,7 +161,7 @@ const Login = (props) => {
   
   
   
-              <Text onPress={()=> {this.forgot()}} style={{fontFamily:'Roboto-Light', alignSelf: 'flex-end', marginBottom: 5, marginTop: 5 }}>Forgot Password?</Text>
+              <Text onPress={forgot} style={{fontFamily:'Roboto-Light', alignSelf: 'flex-end', marginBottom: 5, marginTop: 5 }}>Forgot Password?</Text>
               <TouchableOpacity
                 style={styles.submitButton}
                 onPress={onSubmitLogin}

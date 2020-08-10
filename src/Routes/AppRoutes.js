@@ -137,7 +137,12 @@ const CreateProfileStack =  createStackNavigator({
      Wallet: { screen: Wallet ,
       navigationOptions:{
         header:  props => <HeaderComponent value={0} {...props}  wallet={1}  edit={0}/>
-      }
+      },
+      EditProfile: { screen: EditProfile,
+        navigationOptions:{
+         header:  props => <HeaderComponent value={1} {...props} edit={1} />
+       }
+     },
     },
     
     // Availibility: { screen: Availibility },

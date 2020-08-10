@@ -6,6 +6,8 @@
  */
 
 #import "AppDelegate.h"
+@import Firebase;
+@import GoogleMaps;
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -15,6 +17,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [GMSServices provideAPIKey:@"AIzaSyCoiAb0rPg5kzNZWmFxRDN-M_pjSH6sEtM"];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"NewLocumUser"
@@ -27,6 +30,7 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  [FIRApp configure];
   return YES;
 }
 

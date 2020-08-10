@@ -12,7 +12,7 @@ const Splash = (props) => {
     
 
 
-    check = async () =>{
+   const check = async () =>{
 
             dispatch(hideSpinner())
         
@@ -29,7 +29,7 @@ const Splash = (props) => {
     }
 
     useEffect(() => {
-        StatusBar.setBackgroundColor('#0040FF')
+       // StatusBar.setBackgroundColor('#0040FF')
         check()
 
     })

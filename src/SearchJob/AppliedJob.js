@@ -3,7 +3,7 @@ import {View ,Text, TouchableOpacity ,FlatList,ScrollView,Image ,Alert} from 're
 import {Card} from 'react-native-elements';
 import { useSelector, useDispatch } from 'react-redux';
 import ApiUrl from '../Globals/ApiUrl';
-import {get_applied_jobs} from '../redux/stores/actions/search_job_action';
+import {get_applied_jobs,setEmptyAlppliedJObs} from '../redux/stores/actions/search_job_action';
 import {getday, showMessage} from '../Globals/Globals';
 import MyActivityIndicator from '../CustomUI/MyActivityIndicator';
 import { StackActions, NavigationActions } from 'react-navigation';
@@ -21,6 +21,7 @@ const AppliedJob = (props) => {
  
     useEffect(() => {
         
+        //dispatch(setEmptyAlppliedJObs());
         dispatch(checkuserAuthentication(user_id,device_token))
             .then(response => {
                 if(response.data.error){

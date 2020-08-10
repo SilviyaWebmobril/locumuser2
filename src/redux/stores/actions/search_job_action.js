@@ -16,8 +16,10 @@ export const searchRequestedJobs = (category_id,experience,location,lat,long,use
         formData.append('experience',"");
         //formData.append('location', location);
         formData.append("location_preference",location_prefrence)
-        formData.append('lat', lat);
-		formData.append('long', long);
+        // formData.append('lat', lat);
+        // formData.append('long', long);
+        formData.append('latitude', lat);
+		formData.append('longitude', long);
         formData.append("user_id",user_id)
         formData.append("state",state_id);
         formData.append("city",city_id)
@@ -79,6 +81,14 @@ const  shuffle = (a)  => {
     return a;
 }
 
+export const setEmptyAlppliedJObs= ()  => {
+
+    return {
+        type: ActionTypes.APPLIED_JOB,
+        applied_jobs : []
+    }
+}
+
 
 export const get_applied_jobs = (user_id) => {
 
@@ -98,6 +108,11 @@ export const get_applied_jobs = (user_id) => {
                 });
 
                 
+                dispatch({
+
+                    type: ActionTypes.APPLIED_JOB,
+                    applied_jobs : []
+                });
                 if(response.data.status === 'success'){
 
                     dispatch({

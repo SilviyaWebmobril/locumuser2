@@ -5,7 +5,6 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import Geolocation from '@react-native-community/geolocation';
-import {checkMultiple,requestMultiple,PERMISSIONS} from 'react-native-permissions';
 import {showMessage} from '../Globals/Globals';
 
 
@@ -24,45 +23,7 @@ const SearchLocation = (props) => {
 
       const [region ,setRegion] = useState(region1);
 
-      const requestLocationPermission = async()  => {
-        // try {
-        //   const granted = await PermissionsAndroid.request(
-        //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        //     {
-        //       'title': 'Location Permission',
-        //       'message': 'Please allow access to Location services from Settings.',
-        //       buttonNeutral: 'Ask Me Later',
-        //       buttonNegative: 'Cancel',
-
-        //     },
-            
-        //   )
-        //   if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        //     console.log("granted",granted);
-        //     getCurrentPosition();
-        //     console.log("You can use locations ")
-        //   } else {
-        //     console.log("Location permission denied")
-        //   }
-        // } catch (err) {
-        //   console.warn(err)
-        // }
-
-        // checkMultiple([PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION, PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION]).then(
-        //   (statuses) => {
-        //     console.log('Camera', statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION]);
-        //     console.log('FaceID', statuses[PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION]);
-        //   },
-        // );
-    
-
-        // requestMultiple([PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION, PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION]).then(
-        //   (statuses) => {
-        //     console.log('Camera', statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION]);
-        //     console.log('FaceID', statuses[PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION]);
-        //   },
-        // );
-      }
+     
 
       const getCurrentPosition = async() => {
         try {
@@ -92,13 +53,7 @@ const SearchLocation = (props) => {
       useEffect(() => {
 
         getCurrentPosition();
-        // if(Platform.OS == 'android'){
-        //   requestLocationPermission();
-        // }else{
-        //    getCurrentPosition();
-        // }
        
-      
          
       }, []);
 
@@ -113,17 +68,12 @@ const SearchLocation = (props) => {
             <MapView
               provider={PROVIDER_GOOGLE}
               style={{
-                // top: 0,
-                // left: 0,
-                // right: 0,
-                // bottom: 0,
-                // position: 'absolute'
                 width:"100%",
                 height:"100%"
               }}
               
               minZoomLevel={11}
-              region={region}
+              initialRegion={region}
               showsUserLocation={true}
               //followUserLocation={true}
             

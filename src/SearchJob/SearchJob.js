@@ -6,7 +6,7 @@ import { TextField } from 'react-native-material-textfield';
 import NetInfo from "@react-native-community/netinfo";
 import { useSelector , useDispatch} from 'react-redux';
 import { Dropdown } from 'react-native-material-dropdown';
-import {fetchJobCategories, getStatesList, getCitiesList} from '../redux/stores/actions/register_user';
+import {fetchJobCategories, getStatesList, getCitiesList,showSpinner, hideSpinner} from '../redux/stores/actions/register_user';
 import { checkuserAuthentication,logoutUser} from '../redux/stores/actions/auth_action';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import { searchRequestedJobs } from '../redux/stores/actions/search_job_action';
@@ -14,6 +14,7 @@ import {showMessage}  from '../Globals/Globals';
 import {
 	StackActions, NavigationActions
 } from 'react-navigation';
+import Geolocation from '@react-native-community/geolocation';
 
 
 const SearchJob = (props) => {
@@ -41,6 +42,9 @@ const SearchJob = (props) => {
     const [city_label ,setCityLabel ] = useState("");
     const [city_id , setCityId] = useState("");
     const [toggleSwitch, setToggleSwitch] = useState(false)
+    const LATITUDE_DELTA = 0.1;
+    const LONGITUDE_DELTA = 0.1;
+
 
     useEffect(() => {
 
@@ -177,7 +181,7 @@ const SearchJob = (props) => {
                 if(isConnected){
 
                     dispatch(checkuserAuthentication(user_id,device_token))
-                        .then(response => {
+                        .then(async(response) => {
 
                             if(response.data.error){
                                 showMessage(0, 'Session Expired! Please Login.', 'Search Job', true, false);
@@ -192,12 +196,48 @@ const SearchJob = (props) => {
 
                             }else{
                                // dispatch(searchRequestedJobs(dropdown_value_id,experience,fulladdress,latitude,longitude,user_id,props.navigation));
+                               dispatch(showSpinner())
+                               try {
+                                await Geolocation.getCurrentPosition(
+                                (position) => {
+                                  const region = {
+                                    latitude: position.coords.latitude,
+                                    longitude: position.coords.longitude,
+                                    latitudeDelta: LATITUDE_DELTA,
+                                    longitudeDelta: LONGITUDE_DELTA,
+                                  };
+                                //  setRegion(region);
+                    
+                                    dispatch(hideSpinner())
+                                    let location_preference = 0;
+                                    if(toggleSwitch){
+                                        location_preference = 1;
+                                    }
+                                    dispatch(searchRequestedJobs(dropdown_value_id,experience,fulladdress,position.coords.latitude ,position.coords.longitude,user_id,state_id,city_id,location_preference ,props.navigation));
+
+                                },
+                                 (error) => {
+                                  //TODO: better design
+                                  if(error.code ==  1 ){
+    
+                                    showMessage(1,'To get the jobs from your current location , please allow access to location services from Settings.', 'Location', true, false);
+                                  }
+                                    console.log("error on map",error);
+                                    dispatch(hideSpinner())
+                                    let location_preference = 0;
+                                    if(toggleSwitch){
+                                        location_preference = 1;
+                                    }
+                                    dispatch(searchRequestedJobs(dropdown_value_id,experience,fulladdress,latitude,longitude,user_id,state_id,city_id,location_preference ,props.navigation));
+
+                                 
+                                },
+                                {enableHighAccuracy: false, timeout: 20000, }
+                              );
+                            } catch(e) {
+                              alert(e.message || "");
+                            }
                         
-                               let location_preference = 0;
-                                if(toggleSwitch){
-                                    location_preference = 1;
-                                }
-                                dispatch(searchRequestedJobs(dropdown_value_id,experience,fulladdress,latitude,longitude,user_id,state_id,city_id,location_preference ,props.navigation));
                             }
 
                         })

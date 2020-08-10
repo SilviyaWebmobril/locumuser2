@@ -5,17 +5,23 @@ import MyHOC from '../HOC/MyHOC';
 //import firebase from 'react-native-firebase';
 import messaging from '@react-native-firebase/messaging';
 import { useDispatch, useSelector } from "react-redux";
-import {userDevicetoken,fetchJobCategories} from '../redux/stores/actions/auth_action';
+import {userDevicetoken,fetchJobCategories,} from '../redux/stores/actions/auth_action';
 import {showMessage} from '../Globals/Globals';
+import Axios from 'axios';
+import {showSpinner ,hideSpinner,upadetUserData,updateUserId} from '../redux/stores/actions/register_user'
 import {updateRemainingJobs} from '../redux/stores/actions/packages_coupon_action'
-
+import ApiUrl from '../Globals/ApiUrl';
+import {
+	StackActions, NavigationActions
+} from 'react-navigation';
 
 const HomeScreen =(props)  => {
 
     const token = useSelector(state => state.auth.device_token);
     const post_available =  useSelector(state => state.register.user.jobs_remaining)
     const verify = useSelector(state => state.register.user.verify);
-    const wallet_balance =  useSelector(state => state.register.user.wallet_balance)
+    const user = useSelector(state => state.register.user);
+    const wallet_balance =  useSelector(state => state.register.user.wallet_balance);
     const dispatch =  useDispatch();
 
 
@@ -28,13 +34,13 @@ const HomeScreen =(props)  => {
         }
       }
    
-    const  onTokenRefreshListener =()=>  messaging().onTokenRefresh(fcmToken => {
-        // Process your token as required
-        if(fcmToken){
-          console.log("get fcmtoken123",fcmToken);
-            dispatch(userDevicetoken(fcmToken));
-        }
-    });
+    // const  onTokenRefreshListener =()=>  messaging().onTokenRefresh(fcmToken => {
+    //     // Process your token as required
+    //     if(fcmToken){
+    //       console.log("get fcmtoken123",fcmToken);
+    //         dispatch(userDevicetoken(fcmToken));
+    //     }
+    // });
 
     const getFcmToken =  () => messaging().getToken()
     .then(fcmToken => {
@@ -45,7 +51,7 @@ const HomeScreen =(props)  => {
         } else {
             console.log("get fcmtoken111");
             
-            onTokenRefreshListener();
+         //   onTokenRefreshListener();
         } 
     });
 
@@ -135,8 +141,31 @@ const HomeScreen =(props)  => {
 
     useEffect(() => {
 
+        try{
+
+            dispatch(showSpinner())
+        console.log("get fcmtoken123ss");
+        Axios.post(ApiUrl.base_url+"home?user_id="+user.id)
+        .then(response =>{
+
+            dispatch(hideSpinner())
+            if(response.data.status){
+                
+                console.log("response...",response.data.data)
+                dispatch(updateUserId(response));
+                dispatch(upadetUserData(response));
+            }else{
+                console.log("error in else");
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            showMessage(0,"Something went wrong ! Please try again later.", 'Home', true, false);
+
+        })
+
          requestUserPermission();
-        onTokenRefreshListener();
+        //onTokenRefreshListener();
          createNotificationListeners()
         
         if(token === null){
@@ -150,9 +179,15 @@ const HomeScreen =(props)  => {
         return () => {
            createNotificationListeners();
            requestUserPermission();
-            onTokenRefreshListener();
+           // onTokenRefreshListener();
         };
 
+
+        }catch(error){
+            console.log(error.message);
+        }
+
+        
     },[]);
 
   
@@ -167,6 +202,11 @@ const HomeScreen =(props)  => {
                
                 <Card containerStyle={styles.cardContainerStyle}>  
                     <TouchableOpacity onPress={()=>{
+
+                        if(verify == 0){
+                            showMessage(0,"Your account is under inspection by admin. Please wait !", 'Home', true, false);
+                            return;
+                        }
                     
                       if(wallet_balance == 0 && post_available == 0){
 
@@ -174,7 +214,7 @@ const HomeScreen =(props)  => {
 
                     }else if(post_available == 0){
 
-                        showMessage(0,"Please buy packages to post a new job.", 'Home', true, false);
+                        showMessage(0,"Please buy packages to Search a new job.", 'Home', true, false);
 
                     }else{
                         props.navigation.navigate("SearchJob")
@@ -190,7 +230,14 @@ const HomeScreen =(props)  => {
                <Card 
                 containerStyle={styles.cardContainerStyle}>
                      <TouchableOpacity onPress={()=>{
-                   props.navigation.navigate("Packages")
+                   props.navigation.navigate('Packages');
+                   //below is used to reset stacki navigator so that goes infirst screen only
+                   const resetAction = StackActions.reset({
+                       index: 0,
+                       key: 'Packages',
+                       actions: [NavigationActions.navigate({ routeName: 'Packages' })],
+                   });
+                   props.navigation.dispatch(resetAction);
                    }}>
                     <Image source={require('../assets/doctor/package.png')} style={styles.imageStyle1} />
                    <Text style={styles.textStyle} >Buy Packages</Text>
@@ -203,7 +250,14 @@ const HomeScreen =(props)  => {
                
                <Card containerStyle={styles.cardContainerStyle}>  
                    <TouchableOpacity onPress={()=>{
-                  props.navigation.navigate("EditProfile")
+                  props.navigation.navigate('Profile');
+                  //below is used to reset stacki navigator so that goes infirst screen only
+                  const resetAction = StackActions.reset({
+                      index: 0,
+                      key: 'Profile',
+                      actions: [NavigationActions.navigate({ routeName: 'EditProfile' })],
+                  });
+                  props.navigation.dispatch(resetAction);
                   }}>
                    <Image source={require('../assets/doctor/wallet.png')}  style={styles.imageStyle1}  />
                    <Text style={styles.textStyle}>Profile</Text>
@@ -214,7 +268,14 @@ const HomeScreen =(props)  => {
               <Card 
                containerStyle={styles.cardContainerStyle}>
                     <TouchableOpacity onPress={()=>{
-                  props.navigation.navigate("AppliedJobs")
+                 props.navigation.navigate('AppliedJobs');
+                 //below is used to reset stacki navigator so that goes infirst screen only
+                 const resetAction = StackActions.reset({
+                     index: 0,
+                     key: 'AppliedJobs',
+                     actions: [NavigationActions.navigate({ routeName: 'AppliedJob' })],
+                 });
+                 props.navigation.dispatch(resetAction);
                   }}>
                    <Image source={require('../assets/clinic/4.png')} style={styles.imageStyle} />
                   <Text style={styles.textStyle} >Applied Jobs</Text>
@@ -226,7 +287,14 @@ const HomeScreen =(props)  => {
                
                <Card containerStyle={styles.cardContainerStyle}>  
                    <TouchableOpacity onPress={()=>{
-                  props.navigation.navigate("Wallet")
+                  props.navigation.navigate('Wallet');
+                  //below is used to reset stacki navigator so that goes infirst screen only
+                  const resetAction = StackActions.reset({
+                      index: 0,
+                      key: 'Wallet',
+                      actions: [NavigationActions.navigate({ routeName: 'Wallet' })],
+                  });
+                  props.navigation.dispatch(resetAction);
                   }}>
                    <Image source={require('../assets/doctor/wallet.png')}  style={styles.imageStyle1}  />
                    <Text style={styles.textStyle}>Wallet</Text>

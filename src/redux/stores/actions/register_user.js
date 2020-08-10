@@ -676,22 +676,54 @@ export const uploadProfilePic = (user_id,picUri ,picName) => {
                         type :AUTH_CHANGED,
                         authenticated:true
     
+                    });
+                    dispatch({
+                        type:HIDE_SPINNER
                     })
+
+
+                    if(response.data.result.profile_update_status == 0 ){
+                        // move to create profile
+                        navigation.navigate('CreateProfile',{"name":response.data.result.name,"email":response.data.result.email,"mobile":response.data.result.mobile});
+                    }else if(response.data.result.document_update_status == 0 ){
+                        // move to upload documnets 
+                        navigation.navigate('UploadDocuments');
+                    }else if( response.data.result.profile_update_status ==  1 && response.data.result.document_update_status ==  1){
+
+                            if(response.data.result.verify ==  2){
+                                showMessage(0,"Your account is rejected by admin.", 'Home', true, false);
+                                return;
+                            }
+                            if(response.data.result.verify == 3){
+                                showMessage(0,"Admin has rejected your documents ! Please upload again", 'Home', true, false);
+
+                                dispatch( {
+                                    type:CREATE_PROFILE,
+                                    result_user:response.data.result
+                                });
+                    
+                                navigation.navigate('UploadDocuments');
+
+                                return;
+                                
+                            }
     
 
-                    dispatch({
-                        type:CREATE_PROFILE,
-                        result_user:response.data.result
-                    });
+                                dispatch({
+                                    type:CREATE_PROFILE,
+                                    result_user:response.data.result
+                                });
 
-                    dispatch({
-                        type:STORE_USER_ID_GLOBALLY,
-                        user_details:response.data.result,
-                        result_user_id:response.data.result.id,
-                        device_token:token
-                    })
-                   // AsyncStorage.setItem('user_id',JSON.stringify(user_data.id));
-                    navigation.navigate('Home')
+                                dispatch({
+                                    type:STORE_USER_ID_GLOBALLY,
+                                    user_details:response.data.result,
+                                    result_user_id:response.data.result.id,
+                                    device_token:token
+                                })
+                            // AsyncStorage.setItem('user_id',JSON.stringify(user_data.id));
+                                navigation.navigate('Home')
+
+                    }
 
                 }else{
 
@@ -845,13 +877,15 @@ export const uploadProfilePic = (user_id,picUri ,picName) => {
         axios.post(ApiUrl.base_url+ApiUrl.forgot_password,formData)
         .then(response =>{
 
+            console.log("response...",response.data);
+            dispatch({
+                type:HIDE_SPINNER
+            })
+            
+
             if(response.data.status == 'success'){
 
-                dispatch({
-                    type:HIDE_SPINNER
-                })
-                
-
+               
                 navigation.navigate("Login")
                 const resetAction = StackActions.reset({
                     index: 0,
@@ -859,6 +893,9 @@ export const uploadProfilePic = (user_id,picUri ,picName) => {
                     actions: [NavigationActions.navigate({ routeName: 'Login' })],
                 });
                 navigation.dispatch(resetAction);
+            }else{
+                showMessage(0,response.data.message, 'Forgot Password', true, false);
+
             }
         })
         .catch(error => {
@@ -880,6 +917,29 @@ export const uploadProfilePic = (user_id,picUri ,picName) => {
     return {
         type:UPDATE_WALLET_BALANCE,
         wallet_balance : balance
+    }
+}
+
+
+
+export const upadetUserData = (response) => {
+
+  
+
+    return {
+        type:CREATE_PROFILE,
+        result_user:response.data.data
+    }
+}
+
+export const updateUserId = response => {
+
+    return{
+        type:STORE_USER_ID_GLOBALLY,
+        user_details:response.data.data,
+        result_user_id:response.data.data.id,
+        device_token:response.data.data.device_tokken
+
     }
 }
 
