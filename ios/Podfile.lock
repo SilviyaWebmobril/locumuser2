@@ -303,6 +303,8 @@ PODS:
     - React
   - react-native-netinfo (4.7.0):
     - React
+  - react-native-notifications (3.3.2):
+    - React
   - react-native-webview (7.6.0):
     - React
   - React-RCTActionSheet (0.61.5):
@@ -386,6 +388,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-notifications (from `../node_modules/react-native-notifications`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -472,6 +475,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-notifications:
+    :path: "../node_modules/react-native-notifications"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
@@ -549,6 +554,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: 3637d63fef7e32a230141ab4660d3ceb773c824f
   react-native-maps: 6e499eee4eabf422ba8b6f94e993cc768bf35153
   react-native-netinfo: 3dd993921571d01b78a8f91f1caaffcab7a1e1c7
+  react-native-notifications: 36e988b24283fc49f70717a6c26e789c502085df
   react-native-webview: 711cef318a554093b09a5b871894011435d87a8d
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
@@ -568,6 +574,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 8900a0f0f3b7cb699ed264b86a66ed5d4addd67c
+PODFILE CHECKSUM: fd94cf8a02af6b6d6cd72c3a5abc6bea29d22d29
 
 COCOAPODS: 1.9.3

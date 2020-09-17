@@ -50,7 +50,7 @@ const CreateProfileStack =  createStackNavigator({
     // ForgotPassword: { screen: ForgotPassword},
     CreateProfile :{screen :CreateProfile,
       navigationOptions:{
-        header:  props => <HeaderComponent value={0} {...props}  />
+        header:  props => <MyHeader  {...props}  title=""  value={0}/>
       }
     },
     UploadDocuments: { screen: UploadDocuments,
@@ -76,7 +76,8 @@ const CreateProfileStack =  createStackNavigator({
      },
   },{
     //headerMode: 'none',
-    initialRouteName:'Login'
+    initialRouteName:'Login',
+    gestureEnabled:false
   });
 
 
@@ -136,11 +137,11 @@ const CreateProfileStack =  createStackNavigator({
      },
      Wallet: { screen: Wallet ,
       navigationOptions:{
-        header:  props => <HeaderComponent value={0} {...props}  wallet={1}  edit={0}/>
+        header:  props => <MyHeader   value={0} {...props}  title="" wallet={1}  />
       },
       EditProfile: { screen: EditProfile,
         navigationOptions:{
-         header:  props => <HeaderComponent value={1} {...props} edit={1} />
+         header:  props => <MyHeader   value={0} {...props}  title="" wallet={0}/>
        }
      },
     },
@@ -158,14 +159,15 @@ const CreateProfileStack =  createStackNavigator({
   
   }, {
     // headerMode: 'none',
-       initialRouteName: 'HomeScreen'
+       initialRouteName: 'HomeScreen',
+       gestureEnabled:false
   
   })
 
   const editStack = createStackNavigator({
     EditProfile: { screen: EditProfile,
        navigationOptions:{
-        header:  props => <HeaderComponent value={1} {...props} edit={1} />
+        header:  props =><MyHeader   value={1} {...props}  title=""/>
       }
     },
     LocationPrefrences: { screen: LocationPrefrences,
@@ -182,7 +184,8 @@ const CreateProfileStack =  createStackNavigator({
      },
   }, {
     
-       initialRouteName: 'EditProfile'
+       initialRouteName: 'EditProfile',
+       gestureEnabled:false
   
   })
 
@@ -199,7 +202,8 @@ const TransactionStack = createStackNavigator({
    },
 
 }, {
-     initialRouteName: 'TransactionList'
+     initialRouteName: 'TransactionList',
+     gestureEnabled:false
 
 });
 
@@ -221,7 +225,8 @@ const PackageStack = createStackNavigator({
    },
  
  }, {
-      initialRouteName: 'Packages'
+      initialRouteName: 'Packages',
+      gestureEnabled:false
  
  });
 
@@ -229,7 +234,7 @@ const PackageStack = createStackNavigator({
  const WalletStack = createStackNavigator({
   Wallet: { screen: Wallet ,
     navigationOptions:{
-      header:  props => <HeaderComponent value={2} {...props}  wallet={1}  edit={0}/>
+      header:  props => <MyHeader {...props} title="" value={0}  />
     }
   },
   AddMoney: { screen: AddMoney,
@@ -245,7 +250,8 @@ const PackageStack = createStackNavigator({
 
 }, {
 
-     initialRouteName: 'Wallet'
+     initialRouteName: 'Wallet',
+     gestureEnabled:false
 
 });
 
@@ -267,7 +273,8 @@ const AppliedJobsStack  = createStackNavigator({
    },
 
 }, {
-     initialRouteName: 'AppliedJob'
+     initialRouteName: 'AppliedJob',
+     gestureEnabled:false
 
 });
 
@@ -284,7 +291,8 @@ const resetStack = createStackNavigator({
    },
 
 }, {
-     initialRouteName: 'ResetPassword'
+     initialRouteName: 'ResetPassword',
+     gestureEnabled:false
 
 });
 
@@ -302,7 +310,8 @@ const termsStack = createStackNavigator({
    },
 
 }, {
-     initialRouteName: 'TermsCondition'
+     initialRouteName: 'TermsCondition',
+     gestureEnabled:false
 
 });
 
@@ -327,7 +336,8 @@ const suggestionStack = createStackNavigator({
 },
 
 {
-  initialRouteName: 'SuggestedJobs'
+  initialRouteName: 'SuggestedJobs',
+  gestureEnabled:false
 
 }
 )

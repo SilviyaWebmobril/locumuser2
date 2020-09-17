@@ -72,31 +72,24 @@ export const wallet_history = (user_id) => {
                     type: ActionTypes.HIDE_SPINNER
                 });
 
-              
+                console.log("wallets",response.data.result);
                 if (response.data.status === 'success') {
                     if (response.data.result.length > 0) {
 
-                        console.log("wallets",response.data.result);
+                        console.log("wallets",response.data);
                        dispatch({
                            type:ActionTypes.WALLET_HISTORY,
                            wallet :response.data.result,
                        })
 
-                    }
-                    else {
-                        showMessage(0, "No transactions history found !", 'Transactions', true, false);
+                    } else {
 
-                    }
-
-
-
-
+                      //  showMessage(0, "No Transaction found", 'Transactions', true, false);
+    
+                    }   
+                 
                 }
-                else {
-
-                    showMessage(0, response.data.message, 'Transactions', true, false);
-
-                }
+               
 
             }).catch(error => {
 

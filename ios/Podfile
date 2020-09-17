@@ -38,6 +38,7 @@ target 'NewLocumUser' do
 
   pod 'RNFBMessaging', :path => '../node_modules/@react-native-firebase/messaging'
   pod 'RNFBApp', :path => '../node_modules/@react-native-firebase/app'
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
   pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
 

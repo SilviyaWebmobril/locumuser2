@@ -35,9 +35,10 @@ export const getStatesList = () => (dispatch) =>
         axios.post(ApiUrl.base_url+ApiUrl.get_states,formdata)
             .then(response => {
 
+                let states_list =[] ;
                 if(response.data.status === 'success'){
 
-                    let states_list =[] ;
+                   
                     let new_obj;
                    response.data.data.forEach(element => {
 
@@ -56,7 +57,7 @@ export const getStatesList = () => (dispatch) =>
                     })
                 }
 
-                resolve(1);
+                resolve(states_list);
                
             })
             .catch(error => {
@@ -167,7 +168,7 @@ export const userRegister  = (first_name,last_name,email,mobile,password,navigat
             console.log("respnse....",response.data.result)
             //dispatch(NavigationActions.navigate({ routeName: 'NoNetwork' }));
 
-           navigation.navigate('CreateProfile',{"first_name":first_name,"last_name":last_name,"email":email,"mobile":mobile});
+           navigation.navigate('CreateProfile',{"first_name":first_name,"last_name":last_name,"email":email,"mobile":mobile,"user_id":response.data.result});
           
         }else{
 
@@ -208,11 +209,11 @@ export const fetchJobCategories =  () => (dispatch) =>
         axios.post(ApiUrl.base_url+ApiUrl.get_job_categories)
             .then(response => {
 
-                console.log("response......",response.data);
+                let profession_categories =[] ;
 
                 if(response.data.status === 'success'){
 
-                    let profession_categories =[] ;
+                   
                     let new_obj;
                    response.data.result.forEach(element => {
 
@@ -231,7 +232,7 @@ export const fetchJobCategories =  () => (dispatch) =>
                     })
                 }
 
-                resolve(1)
+                resolve(profession_categories)
                
 
             })
@@ -259,10 +260,10 @@ export const fetchGrades = ()  =>(dispatch) =>
 
     axios.post(ApiUrl.base_url + ApiUrl.grades_list)
         .then(response =>{
-
+            let fetch_grades =[] ;
             if(response.data.status === 'success'){
 
-                let fetch_grades =[] ;
+                
                 let new_obj;
                 response.data.data.forEach(element => {
 
@@ -281,7 +282,7 @@ export const fetchGrades = ()  =>(dispatch) =>
                 })
             }
 
-            resolve(1);
+            resolve(fetch_grades);
 
         })
         .catch(error => {
@@ -311,11 +312,11 @@ export const fetchSpecialities =  (profession_id) => (dispatch) =>
         axios.post(ApiUrl.base_url + ApiUrl.specialities_list,formData)
             .then(response => {
 
-               
+                let fetch_speciality =[] ;
                 if(response.data.status === "success" ){
 
                     
-                    let fetch_speciality =[] ;
+                   
                     let new_obj;
                     response.data.data.forEach(element => {
  
@@ -340,7 +341,7 @@ export const fetchSpecialities =  (profession_id) => (dispatch) =>
 
                 }
 
-                resolve(1);
+                resolve(fetch_speciality);
                
 
             })
@@ -403,7 +404,7 @@ export const submitCreateProfile1 = (user_id,first_name,last_name,profession_val
         axios.post(ApiUrl.base_url + ApiUrl.create_profile,formData,)
         .then(response => {
   
-           
+        console.log("data",response.data);
           if(response.data.status === "success" ){
   
               
@@ -412,7 +413,7 @@ export const submitCreateProfile1 = (user_id,first_name,last_name,profession_val
                   result_user:response.data.result
               });
   
-              navigation.navigate('UploadDocuments');
+              navigation.navigate('UploadDocuments',{"user_id":user_id});
             
           }else{
   
@@ -579,7 +580,7 @@ export const uploadProfilePic = (user_id,picUri ,picName) => {
             .catch(error => {
 
                 console.log("user pic error",error);
-                showMessage(0,'Something went wrong. Please try again later !', 'Create Profile', true, false);
+                showMessage(0,error, 'Create Profile', true, false);
   
                 dispatch( {
                     type:RESPONSE_ERROR,
@@ -613,11 +614,11 @@ export const uploadProfilePic = (user_id,picUri ,picName) => {
         body.append('doc_4', fileFour);
         body.append('userid', user_id);
         body.append('role', 5);
-
+        console.log("bdy",body);
         axios.post(ApiUrl.base_url + ApiUrl.upload_documents,body)
             .then(response => {
 
-                
+                console.log("data",response.data);
                 if(response.data.status == "success"){
 
                     dispatch({
@@ -684,18 +685,22 @@ export const uploadProfilePic = (user_id,picUri ,picName) => {
 
                     if(response.data.result.profile_update_status == 0 ){
                         // move to create profile
-                        navigation.navigate('CreateProfile',{"name":response.data.result.name,"email":response.data.result.email,"mobile":response.data.result.mobile});
+                        showMessage(0,"Complete your profile", 'Login', true, false);
+                        navigation.navigate('CreateProfile',{"first_name":response.data.result.first_name,"last_name":response.data.result.first_name,"email":response.data.result.email,"mobile":response.data.result.mobile,"user_id":response.data.result.id});
+                        return;
                     }else if(response.data.result.document_update_status == 0 ){
                         // move to upload documnets 
-                        navigation.navigate('UploadDocuments');
+                        showMessage(0,"Your Documents are not uploaded yet", 'Login', true, false);
+                        navigation.navigate('UploadDocuments',{"user_id":response.data.result.id});
+                        return;
                     }else if( response.data.result.profile_update_status ==  1 && response.data.result.document_update_status ==  1){
 
                             if(response.data.result.verify ==  2){
-                                showMessage(0,"Your account is rejected by admin.", 'Home', true, false);
+                                showMessage(0,"Your account is rejected by admin.", 'Login', true, false);
                                 return;
                             }
                             if(response.data.result.verify == 3){
-                                showMessage(0,"Admin has rejected your documents ! Please upload again", 'Home', true, false);
+                                showMessage(0,"Admin has rejected your documents ! Please upload again", 'Login', true, false);
 
                                 dispatch( {
                                     type:CREATE_PROFILE,
@@ -707,7 +712,7 @@ export const uploadProfilePic = (user_id,picUri ,picName) => {
                                 return;
                                 
                             }
-    
+                            showMessage(0,"You have logged in successfully", 'Login', true, false);
 
                                 dispatch({
                                     type:CREATE_PROFILE,
@@ -727,12 +732,13 @@ export const uploadProfilePic = (user_id,picUri ,picName) => {
 
                 }else{
 
+                    showMessage(0,response.data.message, 'Login', true, false);
                     dispatch( {
                         type:RESPONSE_ERROR,
                     })
 
                 }
-                showMessage(0,response.data.message, 'Login', true, false);
+              //  showMessage(0,response.data.message, 'Login', true, false);
 
             })
             .catch(error => {
@@ -864,7 +870,7 @@ export const uploadProfilePic = (user_id,picUri ,picName) => {
  }
 
 
- export const forgotPassword = (email) => {
+ export const forgotPassword = (email,navigation) => {
 
     return dispatch => {
         dispatch({
@@ -893,6 +899,7 @@ export const uploadProfilePic = (user_id,picUri ,picName) => {
                     actions: [NavigationActions.navigate({ routeName: 'Login' })],
                 });
                 navigation.dispatch(resetAction);
+                showMessage(0,response.data.message, 'Forgot Password', true, false);
             }else{
                 showMessage(0,response.data.message, 'Forgot Password', true, false);
 

@@ -329,7 +329,7 @@ export default  (state = initialState ,action) => {
                 degree : degree,
                 mobile :mobile,
                 profile_id : user_data.profession.id,
-                speciality_id : user_data.speciality,
+                speciality_id : user_data.speciality.id,
                 hourly_rate: hourly_rate,
                 monthly_rate :monthly_rate,
                 weekly_rate : weekly_rate,

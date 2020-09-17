@@ -33,12 +33,13 @@ const UploadDocuments = (props) => {
     const [file_name_four, setFileNameFour ] = useState("");
     const [file_four_uploaded , setFileFourUploaded ] = useState("");
 
-    const register_id  = useSelector(state => state.register.register_id);
+   // const register_id  = useSelector(state => state.register.register_id);
     const loading_status = useSelector(state => state.register.loading_status);
+    const [register_id ,setTempRegisterId ] = useState(props.navigation.getParam('user_id')) ;
     const dispatch = useDispatch();
 
 
-    isValid = () => {
+    const isValid = () => {
 
 
         let valid = false;
@@ -86,6 +87,13 @@ const UploadDocuments = (props) => {
 
 
     } catch (err) {
+
+      if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+      //  showMessage(0,"cancel the picker",'Upload File',true,false);    
+      } else {
+       // throw err;
+      }
   
     }
 
@@ -120,8 +128,13 @@ const UploadDocuments = (props) => {
 
 
     } catch (err) {
-      //showMessage(0, err.message, "Upload Files", true, false);
-
+      
+      if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+      //  showMessage(0,"cancel the picker",'Upload File',true,false);    
+      } else {
+       // throw err;
+      }
     }
   }
 
@@ -152,8 +165,12 @@ const UploadDocuments = (props) => {
 
 
     } catch (err) {
-    //  showMessage(0, err.message, "Upload Files", true, false);
-
+    if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+      //  showMessage(0,"cancel the picker",'Upload File',true,false);    
+      } else {
+       // throw err;
+      }
     }
   }
 

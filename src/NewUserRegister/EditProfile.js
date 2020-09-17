@@ -11,7 +11,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import Geocoder from 'react-native-geocoding';
 import {showMessage} from '../Globals/Globals';
 import {checkuserAuthentication,logoutUser} from '../redux/stores/actions/auth_action';
-
+import HeaderComponent from '../CustomUI/HeaderComponent';
 import {
 	StackActions, NavigationActions
 } from 'react-navigation';
@@ -80,33 +80,36 @@ const EditProfile = (props) => {
             }else{
                 dispatch(fetchJobCategories())
                 .then(response =>{
-                    if(response == 1){
+                    if(response.length >  0){
+                        response.forEach(element => {
+
+                            if(element.value  == profession_id){
+                                
+                                setProfessionLabel(element.label);
+                                
+                            }
+                        });
                         dispatch(fetchSpecialities(profession_id))
                             .then(response =>{
 
-                                if(response ==  1){
-                                    specialities.forEach(ele => {
+                                console.log("on speci.. edit",response);
+                                console.log("speciality_id",speciality_id);
+                                if(response.length > 0 ){
+                                    response.forEach(ele => {
 
                                         if(ele.value  == speciality_id){
                                            
                                             setSpecialityLabel(ele.label)
                                         }
                                     });
-                                    profession_categories.forEach(element => {
-
-                                        if(element.value  == profession_id){
-                                            
-                                            setProfessionLabel(element.label);
-                                            
-                                        }
-                                    });
+                                    
 
                                     dispatch(fetchGrades())
                                     .then(response =>{
         
-                                        if(response ==1 ){
-                                            grades.forEach(element => {
-                                                console.log("ele-- grades",element);
+                                        if(response.length > 0){
+                                            response.forEach(element => {
+                                               
                                                 if(element.value == grades_id) {
                                                    
                                                     setGradeLabel(element.label)
@@ -114,9 +117,9 @@ const EditProfile = (props) => {
                                             });
                                             dispatch(getStatesList())
                                                 .then(response => {
-                                                    if(response == 1){
-
-                                                        get_states_list.map(element => {
+                                                    if(response.length > 0 ){
+                                                        console.log("ele-- states",response);
+                                                        response.map(element => {
                     
                                                             if(element.value == state_id){
                                                                 setStateLabel(element.label);
@@ -454,14 +457,13 @@ const EditProfile = (props) => {
     }
 
     return(
+        <>
+        <HeaderComponent  edit={1} create={0} user_id={user.id} {...props}/>
         <KeyboardAwareScrollView>
+       
         <View style={styles.container}>
 
-                {/* <TouchableOpacity
-                    onPress={setLocationPref}
-                    >
-                     <Text style={styles.locationPrefText} >+ Add Location {'\n'}Prefrence</Text>
-                </TouchableOpacity> */}
+                
 
                 <TextField
                     style={{ alignSelf: 'center',color:'#A9A9A9' }}
@@ -745,7 +747,9 @@ const EditProfile = (props) => {
                 </TouchableOpacity>
 
         </View>
+        
         </KeyboardAwareScrollView>
+        </>
 
 
       

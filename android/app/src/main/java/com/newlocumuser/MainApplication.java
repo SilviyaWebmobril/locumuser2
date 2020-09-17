@@ -11,6 +11,8 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.wix.reactnativenotifications.RNNotificationsPackage;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class MainApplication extends Application implements ReactApplication {
       new ReactNativeHost(this) {
         @Override
         public boolean getUseDeveloperSupport() {
-          return BuildConfig.DEBUG
+          return false
                   ;
         }
 
@@ -32,7 +34,8 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
 
            // packages.add(  new ReactNativeFirebaseAppPackage());
-          return packages;
+          //  packages.add(new RNNotificationsPackage(MainApplication.this));
+            return packages;
         }
 
         @Override

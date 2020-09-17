@@ -7,6 +7,7 @@ import MyActivityIndicator from '../CustomUI/MyActivityIndicator';
 import {checkuserAuthentication,logoutUser} from '../redux/stores/actions/auth_action';
 import { StackActions, NavigationActions } from 'react-navigation';
 import {showMessage} from '../Globals/Globals';
+import HeaderComponent from '../CustomUI/HeaderComponent';
 
 const Wallet = (props) => {
 
@@ -47,6 +48,8 @@ const Wallet = (props) => {
     }
 
     return(
+        <>
+        <HeaderComponent wallet={1} edit={0} />
         <ScrollView>
              <View style={{flex:1}}>
 
@@ -60,6 +63,11 @@ const Wallet = (props) => {
                     style={{ marginBottom: 20, marginTop: 25 }}
                     data={wallets}
                     showsVerticalScrollIndicator={false}
+                    ListEmptyComponent={()=>{
+                        return(
+                            <Text style={{alignSelf:"center",marginTop:40,fontFamily:"roboto-bold"}}>No Transaction Found.</Text>
+                        )
+                    }}
                     scrollEnabled={false}
                     renderItem={({ item }) =>
 
@@ -86,6 +94,7 @@ const Wallet = (props) => {
             </View>
 
         </ScrollView>
+        </>
        
     )
 } ;

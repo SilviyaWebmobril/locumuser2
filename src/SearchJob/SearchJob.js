@@ -235,6 +235,7 @@ const SearchJob = (props) => {
                                 {enableHighAccuracy: false, timeout: 20000, }
                               );
                             } catch(e) {
+                                dispatch(hideSpinner())
                               alert(e.message || "");
                             }
                         

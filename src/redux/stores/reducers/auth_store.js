@@ -43,6 +43,12 @@ export default (state =  initialState ,action ) => {
                 ...state,
                 user_basic_details:{...user_img},
             }
+
+        case ActionTypes.DEVICE_TOKEN :
+            return {
+                ...state,
+                device_token : action.token
+            }
     
 
         case ActionTypes.LOGOUT_USER:

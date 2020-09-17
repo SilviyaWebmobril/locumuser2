@@ -15,6 +15,9 @@ import {fetchJobCategories,fetchSpecialities,submitCreateProfile1,getStatesList,
 //import Geocoder from 'react-native-geocoder';
 import Geolocation from '@react-native-community/geolocation';
 import Geocoder from 'react-native-geocoding';
+import HeaderComponent from '../CustomUI/HeaderComponent';
+import {userDevicetoken } from '../redux/stores/actions/auth_action';
+import messaging from '@react-native-firebase/messaging';
 
 const CreateProfile = (props,navigation) => {
 
@@ -49,7 +52,8 @@ const CreateProfile = (props,navigation) => {
     const [grades_label,setGradeLabel] = useState("");
     const profession_categories =  useSelector(state => state.register.profession_categories);
     const specialities  = useSelector(state => state.register.specialities);
-    const temp_register_id =  useSelector(state => state.register.register_id);
+    const [temp_register_id ,setTempRegisterId ] = useState(props.navigation.getParam('user_id')) ;
+    //const temp_register_id =  useSelector(state => state.register.register_id);
     const get_states_list = useSelector(state => state.register.states_list);
     const get_cities_list = useSelector(state => state.register.cities_list);
     const [state_id ,setStateId ] = useState("");
@@ -70,7 +74,25 @@ const CreateProfile = (props,navigation) => {
       const LONGITUDE_DELTA = 0.1;
 
     //  const [region ,setRegion] = useState(region1);
-    
+
+
+    const getFcmToken =  () => messaging().getToken()
+        .then(fcmToken => {
+            if (fcmToken) {
+                console.log("fcmToken",fcmToken);
+            dispatch(userDevicetoken(fcmToken));
+            
+            } else {
+            console.log("get fcmtoken111");
+            
+            //  onTokenRefreshListener();
+            } 
+        })
+        .catch(error => {
+            console.log("errr",error);  
+        })
+     
+
 
     useEffect(()=> {
 
@@ -81,9 +103,10 @@ const CreateProfile = (props,navigation) => {
                 props.navigation.navigate("NoNetwork");
                 return;
             }else{
+              //  getFcmToken();
                 dispatch(fetchJobCategories())
                     .then(response =>{
-                        if(response == 1){
+                        if(response.length > 0){
 
                             dispatch(getStatesList());
                             
@@ -116,9 +139,31 @@ const CreateProfile = (props,navigation) => {
                         return;
                     }else{
                         
+                        
                         setCityId("");
                         setCityLabel("");
-                        dispatch(getCitiesList(id));
+                        dispatch(getCitiesList(id))
+                        .then(response =>{
+
+                            if(response.length >0 ){
+
+                                response.forEach(ele => {
+
+                                    if(ele.value  == city_id){
+                        
+                                        // setCityId(ele.value);
+                                        setCityLabel(ele.label)
+                                       
+                                    }
+
+                                })
+                              
+                            }else{
+                                setCityLabel(element.label)
+                            }
+                           
+
+                        })
                     }
                 });
             }
@@ -457,7 +502,7 @@ const CreateProfile = (props,navigation) => {
         <View style={{ flex: 1,marginBottom:20 }}>
             <SafeAreaView style={{ backgroundColor: '#4C74E6' }} />
 
-
+            <HeaderComponent create={1} edit={1} user_id={temp_register_id} {...props} />
             <View style={styles.container}>
                
                 <KeyboardAwareScrollView >

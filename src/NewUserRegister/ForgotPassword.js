@@ -52,7 +52,7 @@ const ForgotPassword = (props) =>{
 
                     console.log("on forgot password");
 
-                    dispatch(forgotPassword(email))
+                    dispatch(forgotPassword(email,props.navigation))
 
                 }
             })
